@@ -1,0 +1,93 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container mt-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="{% url 'income'%}">Revenus</a>
+      </li>
+      <li class="breadcrumb-item" aria-current="page">Ajout de revenus</li>
+    </ol>
+  </nav>
+
+  <div class="card">
+    <div class="card-body">
+      <form action="{% url 'add-income' %}" method="post">
+        {% include 'partials/_messages.html'%} {% csrf_token %}
+        <div class="form-group">
+          <label for="">Montant</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="amount"
+            value="{{values.amount}}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="">Description</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="description"
+            value="{{values.description}}"
+          />
+        </div>
+        <div class="container">
+          <div class="row">
+              <div class="col-sm">
+                  <div class="form-group">
+                    <label for="">Source de revenus</label>
+                    <select class="form-control" name="source">
+                      {% for s in source %}
+                      <option name="source" value="{{s.name}}">
+                        {{s.name}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                   </div>       
+                </div>
+            <div class="col-sm">
+              <div class="form-group">
+                <label for="">Categorie</label>
+                <select class="form-control" name="category">
+                  {% for cat in categorie %}
+                  <option name="category" value="{{cat.name}}">
+                    {{cat.name}}
+                  </option>
+                  {% endfor %}
+                </select>
+               </div>       
+            </div>
+            <div class="col-sm">
+              <div class="form-group">
+                <label for="">Mode de versement</label>
+                <select class="form-control" name="versement">
+                  {% for vers in versement %}
+                  <option name="versement" value="{{vers.name}}">
+                    {{vers.name}}
+                  </option>
+                  {% endfor %}
+                </select>    
+              </div>       
+             </div>
+       
+          </div>
+      </div>
+        <div class="form-group">
+          <label for="">Date de versement</label>
+          <input
+            type="date"
+            class="form-control form-control-sm"
+            name="income_date"
+          />
+        </div>
+      
+
+        <input type="submit" value="Valider" class="btn btn-outline-info rounded" style="float: right;"/>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

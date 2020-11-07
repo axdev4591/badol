@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-10">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="{% url 'income'%}">Revenus</a>
+          </li>
+          <li class="breadcrumb-item" aria-current="page">
+            Edition de revenus
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="col-md-2" onclick="document.getElementById('id01').style.display='block'"
+    >
+      <span
+        class="btn btn-outline-danger" style="border-radius: 12px; margin-top: 0.5em; margin-left: 2em;"
+        >Supprimer</span>
+    </div>
+  </div>
+
+  
+  <div class="card">
+    <div class="card-body">
+      <form action="{% url 'income-edit' income.id %}" method="post">
+        {% include 'partials/_messages.html'%} {% csrf_token %}
+        <div class="form-group">
+          <label for="">Montant</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="amount"
+            value="{{values.amount}}"
+          />
+        </div>
+        <div class="form-group">
+          <label for="">Description</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="description"
+            value="{{values.description}}"
+          />
+        </div>
+
+        <div class="container">
+          <div class="row">
+              <div class="col-sm">
+                  <div class="form-group">
+                    <label for="">Source de revenus</label>
+                    <select class="form-control" name="source">
+                      <option selected name="source" value="{{values.source}}"
+                        >{{values.source}}</option>
+                      {% for source in sources %}
+                      <option name="source" value="{{source.name}}"
+                        >{{source.name}}</option>
+          
+                      {% endfor %}
+                    </select>
+                   </div>       
+                </div>
+            <div class="col-sm">
+              <div class="form-group">
+                <label for="">Categorie</label>
+                <select class="form-control" name="categories">
+                  <option selected name="categories" value="{{values.categories}}"
+                    >{{values.categories}}</option>
+                  {% for categorie in categories %}
+                  <option name="categories" value="{{categorie.name}}"
+                    >{{categorie.name}}</option>
+      
+                  {% endfor %}
+                </select>
+               </div>       
+            </div>
+            <div class="col-sm">
+              <div class="form-group">
+                <label for="">Mode de versement</label>
+                <select class="form-control" name="versements">
+                  <option selected name="versements" value="{{values.versements}}"
+                    >{{values.versements}}</option>
+                  {% for versement in versements %}
+                  <option name="versements" value="{{versement.name}}"
+                    >{{versement.name}}</option>
+      
+                  {% endfor %}
+                </select>  
+              </div>       
+             </div>
+       
+          </div>
+      </div>
+        <div class="form-group">
+          <label for="">Date de versement</label>
+          <input
+            type="date"
+            value="{{values.date | date:'Y-m-d' }}"
+            class="form-control form-control-sm"
+            name="income_date"
+          />
+      
+      
+        </div>
+
+        <input
+          type="submit"
+          value="Valider"
+          class="btn btn-outline-primary btn-primary-sm mt-4" style="border-radius: 12px;"        />
+      </form>
+    </div>
+  </div>
+  <!-- Invisible dialog delete confirm-->
+  <div id="id01" class="modalDialog">
+    <span onclick="document.getElementById('id01').style.display='none'" class="closeDialog" title="Close Modal">×</span>
+    <div class="modal-contentDialog">
+      <div class="containerDialog">
+        <h1>Suppression de revenus</h1>
+        <p> Etes-vous sur de vouloir suppremer ce revenu ?</p>
+        <div class="clearfixDialog">
+          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">NON</button>
+         
+         <a  href="{% url 'income-delete' income.id %}"
+            id = "btndel">  <button type="button" class="deletebtn">  OUI  
+            </button></a>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+
+</div>
+
+
+{% endblock %}

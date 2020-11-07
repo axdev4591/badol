@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %} 
+<div class="container"> <!--mt for margin top-->
+<!-- Section: Contact v.1 -->
+<section class="my-5">
+
+    <!-- Section heading -->
+    <h2 class="h1-responsive font-weight-bold text-center">Contact</h2>
+    <!-- Section description -->
+    <p class="dark-grey-text" style="margin-left: 10em; margin-bottom: 2em; font-family: sans-serif; font-size: 1rem; color: #212529;">
+      Rencontrez-vous un problème technique ? Avez-vous des suggestions pour améliorer Badol? 
+    </p>
+  
+    <!-- Grid row -->
+    <div class="row">
+  
+      <!-- Grid column -->
+      <div class="col-lg-5 mb-lg-0">
+  
+        <!-- Form with header -->
+        <div class="card">
+          <div class="card-body" style="margin-bottom: 2em;">
+            <!-- Header -->
+            <div class="form-header blue accent-1">
+              <h3 class="mt-2"> <img src="{% static 'img/supemail.png' %}" width="40" height="40"/>
+              </i>Ecrivez-nous:</h3>
+            </div>
+
+            <p class="dark-grey-text" style="font-family: sans-serif; font-size: 1rem; color: #212529;">Nous vous répondrons très rapidement.</p>
+           
+            <!-- Body -->
+            <form action="{% url 'contact' %}" method="post" id="contact-form"><input type="hidden" name="csrfmiddlewaretoken" value="NnCmOqVQCwM9expoYWjgoVSmvoFgDanJyddbaAoxy5qewwrHaBr7CjLezpyKONFD">
+              {% csrf_token %}
+              {% include 'partials/_messages.html' %}
+              <div class="md-form">           
+                <div class="row">
+                  <img src="{% static 'img/supuser.png' %}" width="40" height="40"/>
+                    <span style="margin-top: 0.5em;"><label for="form-name"> Nom</label>
+                    </span>
+                </div>
+                <input type="text" name="nom" value="{{fieldValues.nom}}" id="form-name" class="form-control">
+              </div>
+
+              <div class="md-form">
+                <div class="row">    
+                  <img src="{% static 'img/supemail.png' %}" width="40" height="40"/>
+                  <span style="margin-top: 0.5em;"><label for="form-email"> Email</label></span>
+                </div>
+                <input type="text" name="email" value="{{fieldValues.email}}" required id="form-email" class="form-control">
+              </div>
+
+              <div class="md-form">       
+                <div class="row">
+                  <img src="{% static 'img/supsubject.png' %}" width="20" height="30"/>
+                <span style="margin-top: 0.5em;"><label for="form-sujet">Sujet</label></span> 
+                </div>
+                <input type="text" name="sujet" value="{{fieldValues.sujet}}" id="form-sujet" class="form-control">
+
+              </div>
+
+              <div class="md-form">
+                <div class="row">
+                  <img src="{% static 'img/suppencil.png' %}" width="20" height="20"/>
+                      <span style="margin-top: 0.5em;">
+                          <label for="form-message"> Message</label>
+                      </span>
+                </div>
+                <textarea id="form-message" name="message" value="{{fieldValues.message}}" class="form-control md-textarea" rows="3"></textarea>
+
+
+              </div>
+              <div class="text-center" style="margin-top: 1.5em;">
+                <button class="btn btn-outline-primary rounded" type="submit" >Soumettre</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+        <!-- Form with header -->
+  
+      </div>
+      <!-- Grid column -->
+  
+      <!-- Grid column -->
+      <div class="col-lg-7">
+  
+        <!--Google map-->
+        <div id="map-container-section" class="z-depth-1-half map-container-section mb-4" style="height: 420px">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2616.087201886997!2d2.2201265155724212!3d49.027948479304435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e65df320789f2b%3A0xd39316a531a2b689!2s257%20Rue%20de%20Paris%2C%2095150%20Taverny!5e0!3m2!1sen!2sfr!4v1593517718344!5m2!1sen!2sfr" frameborder="0"
+            style="border:0" allowfullscreen height="540" width="550"></iframe>
+   
+        </div>
+        <!-- Buttons-->
+        <div class="row text-center">
+          <div class="col-md-4">
+            <a class="btn-floating">
+                <img src="{% static 'img/suplocation.png' %}" width="40" height="40"/>
+            </a>
+            <p>Taverny, 95150</p>
+            <p class="mb-md-0">France</p>
+          </div>
+          <div class="col-md-4">
+            <a class="btn-floating">
+                <img  src="{% static 'img/supphone.png' %}" width="40" height="40"/>
+            </a>
+            <p>+ 01 234 567 89</p>
+            <p class="mb-md-0">Mon - Fri, 8:00-22:00</p>
+          </div>
+          <div class="col-md-4">
+            <a class="btn-floating">
+                <img src="{% static 'img/supemail.png' %}" width="40" height="40"/>
+            </a>
+            <p>badol-info@gmail.com</p>
+            <p class="mb-0">sale@gmail.com</p>
+          </div>
+        </div>
+  
+      </div>
+      <!-- Grid column -->
+  
+    </div>
+    <!-- Grid row -->
+  
+  </section>
+  <!-- Section: Contact v.1 -->
+   
+</div>
+{% endblock content %}

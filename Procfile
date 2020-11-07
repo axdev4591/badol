@@ -1,0 +1,1 @@
+web: gunicorn badolexpenses.wsgi --log-file -

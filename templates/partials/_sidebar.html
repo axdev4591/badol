@@ -1,0 +1,79 @@
+{% load static %}
+
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse sidebar-background">
+    <div id="myside" class="sidebar-sticky pt-3 mt-4">
+      <ul class="nav flex-column" data-tag="channelList">
+        <li class="nav-item" class="active" onclick="switchChannel(this)">
+          <a class="nav-link" href="{% url 'home' %}">
+            <img  src="{% static 'img/noun_Home_2082115.png' %}" width="30" height="30"/>
+            <span style="color: white;">Accueil</span> 
+          </a>
+        </li>
+        <li class="nav-item" onclick="switchChannel(this)">
+          <a class="nav-link" href="{% url 'expenses' %}">
+            <img src="{% static 'img/noun_expense_1.png' %}" width="30" height="30"/>
+           <span style="color: white;" > Mes Dépenses</span> 
+          </a>
+        </li>
+        <li class="nav-item" onclick="switchChannel(this)">
+          <a class="nav-link" href="{% url 'income' %}">
+            <img src="{% static 'img/noun_Income_1.png' %}" width="30" height="30"/>
+            <span style="color: white;" >Mes revenus</span> 
+          </a>
+        </li>
+      </ul>
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span style="color:black;">Données statistiques</span>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link"  href="{% url 'stats' %}">
+            <img  id='exp' src="{% static 'img/graph2.png' %}" width="30" height="30"/>
+             <span style="color: white;" >Bilan des dépenses </span> 
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'instats' %}">
+            <img src="{% static 'img/graph1.png' %}" width="30" height="30"/>
+            
+            <span style="color: white;" > Bilan des revenus</span> 
+
+          </a>
+        </li>
+      </ul>
+         
+
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span style="color: black;">Configurations</span>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'preferences' %}">
+            <img src="{% static 'img/settings.png' %}" width="30" height="30"/>
+              <span style="color: white;" > Générale</span> 
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="http://127.0.0.1:8000/admin/" target="_blank">
+            <img src="{% static 'img/logo2.png' %}" width="40" height="40"/>
+                  <span style="color: white;" >Admin</span> 
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contact' %}">
+            <img src="{% static 'img/support.png' %}" width="40" height="40"/>
+            
+            <span style="color: white;" > Contact</span> 
+
+          </a>
+        </li>
+
+        <li class="nav-item" style=" margin-top: 9em; margin-left: 1.3em;">
+          <span style="color:white !important;"></span>Développé par Axel MOUELE
+        </li>
+      </ul>
+    </div>
+
+  </nav>
+ 

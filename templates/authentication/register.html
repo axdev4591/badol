@@ -1,0 +1,141 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="fr-fr" >
+<head>
+<title></title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+<link rel="stylesheet" href="/static/css/adminstyle.css" />
+<link rel="stylesheet" type="text/css" href="/static/admin/css/login.css">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css"> 
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">  
+<meta name="robots" content="NONE,NOARCHIVE">
+</head>
+
+
+<body class="login"
+  data-admin-utc-offset="0">
+
+<!-- Container -->
+<div id="container" class="bilan">
+    
+    <!-- Header -->
+    <div id="header">
+        <div id="branding">
+    
+            <h1 id="head">
+                <img src="/static/img/logo3.png" width="50" height="50" style="color: #11ce;"/>
+                Créer un compte Badol
+            </h1>
+        </div>      
+        
+    </div>
+    <!-- END Header -->
+   
+    <!-- Content -->
+    <div id="content" class="colM">    
+        <div id="content-main">
+            <form action="{% url 'register' %}" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="NnCmOqVQCwM9expoYWjgoVSmvoFgDanJyddbaAoxy5qewwrHaBr7CjLezpyKONFD">
+            {% csrf_token %}
+            {% include 'partials/_messages.html' %}
+
+            <div class="form-row">
+                <!--modifier username, dans views-->
+                <label class="required" for="id_username">Nom d’utilisateur :</label> <input type="text" name="username" value="{{fieldValues.username}}" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username">
+            </div>
+            <div class="invalid-feedback" style="display: none;">        
+            </div>
+            <p class="text-sm text-success usernameSuccessOutput"></p>
+
+
+            <div class="form-row">
+                <!--modifier useremail, dans views-->
+                <label class="required" for="id_email">Email :</label> <input type="email" name="email" value="{{fieldValues.email}}" autofocus autocapitalize="none" autocomplete="email" maxlength="150" required id="id_email">
+            </div>
+            <div class="emailFeedbackArea" style="display: none;">        
+            </div>
+            <p class="text-sm text-success useremailSuccessOutput"></p>
+
+
+            <div class="form-row">       
+                <label class="required" for="id_password">Mot de passe :</label> <input type="password" name="password" autocomplete="current-password" required id="id_password">
+            </div>
+            <small class="float-right py-3 showPasswordToggle">SHOW</small>
+
+            
+            <div class="submit-row">
+                <input class="btn btn-block submit-btn" type="submit" value="Valider">
+            </div>
+             <div class="container mt-4">
+                <span class="text-lead lead">Avez-vous déja un compte ?</span><a href="{% url 'login' %}"> Connectez-vous</a><br>
+                <span class="text-lead lead">Mot de passe oublié ?</span><a href="{% url 'request-password' %}"> Mettre à jour</a>
+              </div>
+            </form>
+    </div>       
+        <br class="clear">
+    </div>
+    <!-- END Content -->
+
+    <div id="footer"></div>
+</div>
+<!-- END Container -->
+
+</body>
+</html>
+
+<!-- 
+
+<div class="row" style="margin-top: 8em;" >
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+
+        <div class="card mt-5">
+            <div class="card-body">
+                <div class="card-title py-3">
+                    <h4>Register for a free account</h4>
+                </div>                
+                <form action="{% url 'register' %}" method="POST"> <!---the view register in views.py sgould handle a post method-->
+
+           <!--         {% csrf_token %} <!--prevent attack, good to have it in every form-->
+           <!--         {% include 'partials/_messages.html' %}
+                    <div class="form-group">
+                        <input type="text" name="username" id="usernameField" class="form-control form-control-sm" placeholder="Username" value="{{fieldValues.username}}"/>
+                    </div>
+                    <div class="invalid-feedback" style="display: none;">        
+                    </div>
+                    <p class="text-sm text-success usernameSuccessOutput"></p>
+
+
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control form-control-sm" id="emailField" placeholder="Email"  value="{{fieldValues.email}}"/>
+                    </div>
+                    <div class="emailFeedbackArea" style="display: none;">        
+                    </div>
+                    <p class="text-sm text-success useremailSuccessOutput"></p>
+
+                    
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control form-control-sm" id="passwordField" placeholder="Password" />
+                        <small class="float-right py-3 showPasswordToggle">SHOW</small>
+                    </div>
+                    <input type="submit" value="Register" class="btn btn-block btn-primary submit-btn"/>
+                </form>
+            </div>
+
+            <div class="container">
+                <span class="text-lead lead">Avez-vous déja un compte ?</span><a href="{% url 'login' %}">Connectez-vous</a><br>
+              <span class="text-lead lead">Mot de passe oublié ?</span><a href="{% url 'request-password' %}">Mettre à jour</a>
+              </div>
+        </div>
+
+    </div>
+    <div class="col-md-4"></div>
+
+</div>
+
+-->
+<script src="{% static 'js/register.js'%}"></script>

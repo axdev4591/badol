@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<div class="container mt-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Dépenses</a></li>
+      <li class="breadcrumb-item" aria-current="page">Nouvelle dépense</li>
+    </ol>
+  </nav>
+
+<div class="card">
+  <div class="card-body">
+
+    <form action="{% url 'add-expense' %}" method="POST">
+    {% include 'partials/_messages.html'%}
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="">Montant</label>
+      <input type="text" class="form-control form-control-sm" name="amount" value="{{ values.amount}}">
+    </div>
+    <div class="form-group">
+      <label for="">Description</label>
+      <input type="text" class="form-control form-control-sm" name="description" value="{{ values.description}}">
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="">Categorie</label>
+            <select class="form-control" name="category">
+              {% for category in categories %}
+              <option name="category" value="{{category.name}}">
+                {{category.name}}
+              </option>
+              {% endfor %}
+            </select>
+           </div>       
+        </div>
+        <div class="col-sm">
+          <div class="form-group">
+            <label for="">Mode de paiement</label>
+            <select class="form-control" name="payment">
+              {% for payment in payments %}
+              <option name="payment" value="{{payment.name}}">
+                {{payment.name}}
+              </option>
+              {% endfor %}
+            </select>    
+          </div>       
+         </div>
+   
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="">Date de dépense</label>
+      <input type="date" class="form-control form-control-sm" name="expense_date" value="{{ date2d | date:'d-m-Y'}}" >
+    </div>
+
+
+    <input type="submit" value="Valider" class="btn btn-outline-info rounded" style="float: right;"/>
+  </form>
+
+  </div>
+</div>
+</div>
+
+
+{% endblock %}
+
+
