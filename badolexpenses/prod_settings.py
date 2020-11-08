@@ -1,6 +1,6 @@
 import dj_database_url
+from .settings import *
 
-from badolexpenses.settings import *
 
 
 
