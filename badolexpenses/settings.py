@@ -132,10 +132,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 #tell djando where to search our static files
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'badolexpenses/static')]
+STATICFILES_DIRS = [
+     os.path.join(BASE_DIR, 'badolexpenses/static')
+]
 
 #use by djando to deploy in remote server
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 #configure heroku
 #django_heroku.settings(locals())
