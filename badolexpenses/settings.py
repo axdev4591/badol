@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'expenses.apps.ExpensesConfig',
     'userpreferences.apps.UserpreferencesConfig',
     'userincome.apps.UserincomeConfig',
+    'authenticationApp.apps.AuthenticationappConfig',
 
 ]
 
