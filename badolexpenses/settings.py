@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from django.contrib import messages
-from djando.core.exceptions import ImproperlyConfigured
+#from djando.core.exceptions import ImproperlyConfigured
 #import django_heroku
 
 
