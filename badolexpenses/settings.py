@@ -25,7 +25,7 @@ def get_env_variable(var_name, default_value=None):
 
         if  default_value is None:
             error_msg = "Set the {} environment variable".format(var_name)
-            print error_msg#raise ImproperlyConfigured(error_msg)
+            #raise ImproperlyConfigured(error_msg)
 
         else:
             return default_value
