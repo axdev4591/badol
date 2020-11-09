@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
 import json
-#from validate_email import validate_email
+from validate_email import validate_email
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
@@ -52,8 +52,8 @@ class EmailValidationView(View):
     def post(self, request):
         data = json.loads(request.body)
         email = data['email']
-        #if not validate_email(email):
-        #    return JsonResponse({'email_error': 'Email is invalid'}, status=400)
+        if not validate_email(email):
+            return JsonResponse({'email_error': 'Email is invalid'}, status=400)
         if User.objects.filter(email=email).exists():
             return JsonResponse({'email_error': 'sorry email in use, choose another one '}, status=409)
         return JsonResponse({'email_valid': True})
@@ -184,9 +184,9 @@ class RequestPasswordResetdEmailView(View):
             'values': request.POST
         }
 
-        #if not validate_email(email):
-        #    messages.error('email invalide')
-        #    return render(request, 'authentication/reset-password.html', context)
+        if not validate_email(email):
+            messages.error('email invalide')
+            return render(request, 'authentication/reset-password.html', context)
             
 
         user = User.objects.filter(email=email)
