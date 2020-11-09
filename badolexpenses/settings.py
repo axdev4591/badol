@@ -19,13 +19,11 @@ from django.contrib import messages
 def get_env_variable(var_name, default_value=None):
 
     try:
-        return os.environ[var_name]
-
-    except keyError:
+      
 
         if  default_value is None:
             error_msg = "Set the {} environment variable".format(var_name)
-            #raise ImproperlyConfigured(error_msg)
+            return os.environ[var_name]
 
         else:
             return default_value
