@@ -10,6 +10,7 @@ DATABASES['default'] = dj_database_url.config()
 MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
 
-SECRET_KEY = 'kr8u^6y3vf$(v#$cb7cb=duto*c-+e41&3*4&d*pm_43m@!%x^'
+
+SECRET_KET = get_env_variable('SECRET_KET', )
 
 ALLOWED_HOSTS = ['badol.herokuapp.com'] 
