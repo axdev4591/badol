@@ -3,7 +3,7 @@ from .settings import *
 
 
 DEBUG = False
-TEMPLATE_DEBUG = False
+TEMPLATE_DEBUG = True
 
 DATABASES['default'] = dj_database_url.config()
 
