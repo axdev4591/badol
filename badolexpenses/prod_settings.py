@@ -11,6 +11,6 @@ MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage' 
 
 
-SECRET_KET = get_env_variable('SECRET_KET', )
+SECRET_KET = os.environ['SECRET_KET']
 
 ALLOWED_HOSTS = ['badol.herokuapp.com'] 

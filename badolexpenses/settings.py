@@ -12,23 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from django.contrib import messages
-#from djando.core.exceptions import ImproperlyConfigured
 #import django_heroku
-
-
-def get_env_variable(var_name, default_value=None):
-
-    try:
-      
-
-        if  default_value is None:
-            error_msg = "Set the {} environment variable".format(var_name)
-            return os.environ[var_name]
-
-        else:
-            return default_value
-
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -37,9 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = '+-x&o7pk$fkqkcc4_-%r2d1q5m%j$pi+t=0%6-@#&9l(^8oiu#'
-
-SECRET_KEY = get_env_variable('SECRET_KET', '+-x&o7pk$fkqkcc4_-%r2d1q5m%j$pi+t=0%6-@#&9l(^8oiu#')
+SECRET_KEY = '+-x&o7pk$fkqkcc4_-%r2d1q5m%j$pi+t=0%6-@#&9l(^8oiu#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -167,8 +149,8 @@ MESSAGE_TAGS = {
 
 # email stuff
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_HOST_USER = get_env_variable('EMAIL_HOST_USER')#os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = get_env_variable('EMAIL_HOST_USER')#os.environ.get('EMAIL_HOST_USER')
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 EMAIL_PORT = 587
-EMAIL_HOST_PASSWORD = get_env_variable('EMAIL_HOST_PASSWORD')#os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
