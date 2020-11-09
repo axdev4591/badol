@@ -32,7 +32,7 @@
            
             <!-- Body -->
             <form action="{% url 'contact' %}" method="post" id="contact-form"><input type="hidden" name="csrfmiddlewaretoken" value="NnCmOqVQCwM9expoYWjgoVSmvoFgDanJyddbaAoxy5qewwrHaBr7CjLezpyKONFD">
-                <!--  {% csrf_token %} to use with https-->
+              {% csrf_token %}
               {% include 'partials/_messages.html' %}
               <div class="md-form">           
                 <div class="row">

@@ -44,7 +44,7 @@
         <div id="content-main" >
 
         <form action="{% url 'login' %}" method="post" id="login-form"><input type="hidden" name="csrfmiddlewaretoken" value="NnCmOqVQCwM9expoYWjgoVSmvoFgDanJyddbaAoxy5qewwrHaBr7CjLezpyKONFD">
-         <!--  {% csrf_token %} to use with https-->
+          {% csrf_token %}
           {% include 'partials/_messages.html' %}
 
           <div class="form-row">
