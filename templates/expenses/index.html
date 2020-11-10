@@ -55,13 +55,15 @@
             <td>{{expense.category}}</td>
             <td>{{expense.description}}</td>
             <td>{{expense.date | date:'d-m-Y' }}</td>
-            <td><a href="{% url 'expense-edit' expense.id %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;"
-              >Editer</a></td>
-              <td>
-                <span onclick="reply_click(this.id)"  id="{{  expense.id }}" style="cursor: pointer;">
-                  <i style="font-size:28px; color:red" onclick="document.getElementById('id01').style.display='block'"  class="fa">&#xf014;</i>
-                </span>
-                </td>
+            <td>
+              <a href="{% url 'expense-edit' expense.id %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;"
+              >Editer</a>
+            </td>
+            <td>
+              <span onclick="reply_click(this.id)"  id="{{  expense.id }}" style="cursor: pointer;">
+                <img onclick="document.getElementById('id01').style.display='block'"  src="{% static '/img/delete.png' %}" width="27" height="26"/>
+              </span>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
@@ -73,7 +75,7 @@
       <div class="modal-contentDialog">
         <div class="containerDialog">
           <h1>Suppression de dépenses</h1>
-          <p> Etes-vous sur de vouloir suppremer cette dépense ?</p>
+          <p> Etes-vous sur de vouloir supprimer cette dépense ?</p>
         
           <div class="clearfixDialog">
             <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">NON</button>

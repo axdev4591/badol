@@ -294,15 +294,25 @@ class ContactView(View):
                 messages.error(request, 'Email {0} associé à aucun compte'.format(email))
                 return render(request, 'authentication/contact.html', context)
 
-        email = EmailMessage(
+        email1 = EmailMessage(
                     sujet,
-                    message,
+                    message  + "\n\n ["+email+", "+nom+"]",
                     email,
-                    ['axelmouele4591@gmail.com'],
+                    ['badolappinfo@gmail.com'],
                 )
                 
-        EmailThread(email).start()            
+        EmailThread(email1).start()            
         messages.success(request, 'Votre message a été bien reçu .')
+        email_subject = 'Accusé de réception'
+
+        email2 = EmailMessage(
+                    email_subject,
+                    'Bonjour\n\nNous avons bien reçu votre requête sur badol, nous allons vous répondre dans les plus brefs delais.\n\n\n\n\n\nhttps://badol.herokuapp.com/\n0758000973',
+                    'noreply@badol.com',
+                    [email],
+                )
+                
+        EmailThread(email2).start() 
                 
         return render(request, 'authentication/contact.html', context)
 
