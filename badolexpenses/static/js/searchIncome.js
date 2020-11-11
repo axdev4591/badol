@@ -30,7 +30,7 @@ searchField.addEventListener("keyup", (e) => {
           noResults.style.display = "none";
           data.forEach((item) => {
             tbody.innerHTML += `
-                <tr style="background-color: #e9ecef;">
+                <tr>
                 <td>${item.amount}</td>
                 <td>${item.source}</td>
                 <td>${item.categories}</td>
