@@ -41,7 +41,8 @@ searchField.addEventListener("keyup", (e) => {
                 >Editer</a></td>
                 <td>
                   <span onclick="reply_click(this.id)"  id="${item.id}" style="cursor: pointer;">
-                    <img onclick="document.getElementById('id01').style.display='block'"  src="{% static '/img/delete.png' %}" width="27" height="26"/>
+                  <p onclick="document.getElementById('id01').style.display='block'" class="btn btn-outline-success btn-sm" style="border-radius: 12px;"
+                  >Supprimer</p>
                   </span>
                   </td>
                 </tr>`;
