@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=0.1" />
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
+        <link href="{% static 'css/main.css' %}" rel="stylesheet">
+        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link href="{% static  'css/dashboardCSS/font-awesome.min.css' %}" rel="stylesheet">
+        <link href="{% static  'css/dashboardCSS/datepicker3.css' %}" rel="stylesheet">
+        
+        <!--Custom Font-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+        <!-- Favicons -->
+    
+        <meta name="theme-color" content="#563d7c">
+
+
+    
+        <!-- Custom styles for this template -->
+        <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+        <link href="{% static 'css/main.css' %}" rel="stylesheet">
+        <title>PDF BADOL</title> 
+        <style>
+            @page{
+                size: "A4";
+                margin: 2.5cm 1.5cm 3.5cm 1.5cm;
+
+                @top-center{
+                    content: "Badol";
+                    font-size: 23pt;
+                    font-weight:bold ;
+                    color:darkgreen;
+                }
+                @bottom-left{
+                    content: "Ⓒ CopyRight 2020 Badol, All right reserved ";
+                }
+                @bottom-right {
+                    content: " Page " counter(page) " of " counter(pages);
+                }
+          
+            }
+        </style>
+    </head>
+
+    <body>
+        <img src="{% static 'img/logo3.png' %}" width="50" height="50"/> 
+        <h2>Liste des revenus</h2>
+        <table class="table table-stripped table-hover">
+            <thead>
+              <tr style="background-color:  #e9ecef;">
+                <th>N°</th>
+                <th>Montant</th>
+                <th>Source</th>
+                <th>Categorie</th>
+                <th>Mode de versement</th>
+                <th>Description</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+    
+             <tbody>
+               {% for income in incomes %}
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td style="color:darkcyan;">{{income.amount}} €</td>
+                <td>{{income.source}}</td>
+                <td>{{income.categories}}</td>
+                <td>{{income.versements}}</td>
+                <td>{{income.description}}</td>
+                <td>{{income.date | date:'d-m-Y' }}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                  <td>Total:</td>
+                  <td style="color:darkturquoise;">{{total}}</td>
+              </tr>
+            </tbody>
+           </table>
+           
+    </body>
+
+</html>

@@ -5,9 +5,14 @@ from userpreferences.models import UserPreference
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 import datetime
-# Create your views here.
+import csv
+import xlwt
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.db.models import Sum
 
 
 def search_income(request):
@@ -302,3 +307,79 @@ def instats_view(request):
         'currency': currency
     }
     return render(request, 'income/incomeStats.html', context)
+
+
+
+
+def export_pdf(request):
+    response = HttpResponse(content_type='text/pdf')
+    response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
+         str(datetime.datetime.now()) + '.pdf'
+
+    response['Content-Transfer-Encoding'] = 'binary'
+    incomes = UserIncome.objects.filter(owner=request.user)
+    sum = incomes.aggregate(Sum('amount'))
+
+    html_string = render_to_string('income/pdf-output.html', {'incomes': incomes, 'total': sum['amount__sum']})
+    html = HTML(string=html_string)
+    result =  html.write_pdf()
+
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+
+        output = open(output.name, 'rb')
+        response.write(output.read())
+
+    return response
+
+
+    
+
+def export_excel(request):
+    response = HttpResponse(content_type='text/ms-excel')
+    response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
+         str(datetime.datetime.now()) + '.xls'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Depenses')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold=True
+
+    columns = ['Montant', 'Source', 'Categorie', 'Mode de versement','Description', 'Date']
+
+    for column in range(len(columns)):
+        ws.write(row_num, column, columns[column], font_style)
+
+    font_style = xlwt.XFStyle()
+
+    rows = UserIncome.objects.filter(owner=request.user).values_list('amount','source', 'categories', 'versements', 'description', 'date')
+
+    for row in rows:
+        row_num += 1
+
+        for column  in range(len(row)):
+            ws.write(row_num, column, str(row[column]), font_style)
+
+    wb.save(response)
+
+    return response
+
+
+
+
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
+         str(datetime.datetime.now()) + '.csv'
+
+    writer =  csv.writer(response)
+    writer.writerow(['Montant', 'Source', 'Categorie', 'Mode de versement','Description', 'Date'])
+
+    incomes = UserIncome.objects.filter(owner=request.user)
+
+    for income in incomes :
+        writer.writerow([income.amount, income.source, income.categories, income.versements, income.description, income.date])
+    
+    return response

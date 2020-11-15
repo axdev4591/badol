@@ -16,5 +16,11 @@ urlpatterns = [
     path('stats', views.stats_view,
          name="stats"),
      path('', views.home, name="home"),
+     path('export_csv', views.export_csv,
+         name="export-csv"),
+     path('export_excel', views.export_excel,
+         name="export-excel"),
+     path('export_pdf', views.export_pdf,
+         name="export-pdf"),
 
 ]

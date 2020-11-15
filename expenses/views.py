@@ -5,15 +5,87 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from userpreferences.models import UserPreference
 import datetime
+from userincome.models import UserIncome
 from django.views.decorators.csrf import csrf_exempt
+import csv
+import xlwt
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.db.models import Sum
+
 
 
 @login_required(login_url='/authentication/login')
 def home(request):
-    return render(request, 'expenses/home.html')
+    todays_date = datetime.date.today()
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    
+    yesterday = todays_date-datetime.timedelta(days=1)
+    a_week_ago = todays_date-datetime.timedelta(days=7)
+    a_month_ago = todays_date-datetime.timedelta(days=30)
+    a_year_ago = datetime.date(int(year), 1, 1)
+    incomes = UserIncome.objects.filter(owner=request.user)
+
+    amount_today = 0
+    amount_yesterday = 0
+    amount_a_week_ago = 0
+    amount_a_month_ago = 0
+    amount_year = 0
+    budget = 0
+
+    expenses_today = Expense.objects.filter(owner=request.user,
+                                      date__gte=todays_date, date__lte=todays_date)
+    for expense in expenses_today:
+        amount_today += expense.amount
+
+
+    expenses_yesterday = Expense.objects.filter(owner=request.user,
+                                      date__gte=yesterday, date__lte=yesterday)
+    for expense in expenses_yesterday:
+        amount_yesterday += expense.amount
+
+
+    expenses_week = Expense.objects.filter(owner=request.user,
+                                      date__gte=a_week_ago, date__lte=todays_date)
+    for expense in expenses_week:
+        amount_a_week_ago += expense.amount
+
+
+    expenses_month = Expense.objects.filter(owner=request.user,
+                                      date__gte=a_month_ago, date__lte=todays_date)
+    for expense in expenses_month:
+        amount_a_month_ago += expense.amount
+
+
+    expenses_year = Expense.objects.filter(owner=request.user,
+                                      date__gte=a_month_ago, date__lte=todays_date)
+    for expense in expenses_year:
+        amount_year += expense.amount
+
+    for income in incomes:
+        budget += income.amount
+
+
+    try:    
+        currency = UserPreference.objects.get(user=request.user).currency
+    except:
+        messages.success(request, 'Veuillez configurer votre monnaie')
+        return redirect('preferences')
+
+    context = {
+        'expenses_today': amount_today,
+        'expenses_yesterday': amount_yesterday,
+        'expenses_week': amount_a_week_ago,
+        'expenses_month': amount_a_month_ago,
+        'expenses_year': amount_year,
+        'income': budget
+    }
+
+    return render(request, 'expenses/dashboard.html', context)
 
 def search_expenses(request):
     if request.method == 'POST':
@@ -306,3 +378,78 @@ def stats_view(request):
 
     
     return render(request, 'expenses/stats.html', context)
+
+
+
+def export_pdf(request):
+    response = HttpResponse(content_type='text/pdf')
+    response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
+         str(datetime.datetime.now()) + '.pdf'
+
+    response['Content-Transfer-Encoding'] = 'binary'
+    expenses = Expense.objects.filter(owner=request.user)
+    sum = expenses.aggregate(Sum('amount'))
+
+    html_string = render_to_string('expenses/pdf-output.html', {'expenses': expenses, 'total': sum['amount__sum']})
+    html = HTML(string=html_string)
+    result =  html.write_pdf()
+
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+
+        output = open(output.name, 'rb')
+        response.write(output.read())
+
+    return response
+
+
+    
+
+def export_excel(request):
+    response = HttpResponse(content_type='text/ms-excel')
+    response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
+         str(datetime.datetime.now()) + '.xls'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Depenses')
+    row_num = 0
+    font_style = xlwt.XFStyle()
+    font_style.font.bold=True
+
+    columns = ['Montant', 'Mode de paiement', 'Categorie','Description', 'Date']
+
+    for column in range(len(columns)):
+        ws.write(row_num, column, columns[column], font_style)
+
+    font_style = xlwt.XFStyle()
+
+    rows = Expense.objects.filter(owner=request.user).values_list('amount','payment', 'category', 'description', 'date')
+
+    for row in rows:
+        row_num += 1
+
+        for column  in range(len(row)):
+            ws.write(row_num, column, str(row[column]), font_style)
+
+    wb.save(response)
+
+    return response
+
+
+
+
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
+         str(datetime.datetime.now()) + '.csv'
+
+    writer =  csv.writer(response)
+    writer.writerow(['Montant', 'Mode de paiement', 'Categorie','Description', 'Date'])
+
+    expenses = Expense.objects.filter(owner=request.user)
+
+    for expense in expenses :
+        writer.writerow([expense.amount, expense.payment, expense.category, expense.description, expense.date])
+    
+    return response

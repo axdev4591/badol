@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %} 
+<div style="margin-left: 489px; font-weight: bold;" class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header" style="font-weight: bold;">Votre argent en un clin d'oeil</h1>
+    </div>
+</div><!--/.row-->
+<div style="margin-top: 110px;" class="container">
+      		
+{% include 'partials/_messages.html' %}
+
+
+        <!-- row -->
+		<div class="row">
+			<div class="col-xs-6 col-md-3">
+                
+				<div class="panel panel-default row rounded card" style="margin-right: 4px;">
+					<div class="panel-body easypiechart-panel">
+<!-- //Today Expense -->
+
+						<h4 style="margin-top: 6px;">Dépenses d'aujourd'hui</h4>
+						<div class="easypiechart" id="easypiechart-blue" data-percent="{{expenses_today}}" >
+                            <span class="percent">{{expenses_today}}€</span>
+                        </div>
+					</div>
+				</div>
+            </div>
+
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default row rounded card" style="margin-right: 4px;">
+				
+<!-- //Yestreday Expense -->
+
+					<div class="panel-body easypiechart-panel">
+						<h4 style="margin-top: 6px;">Dépenses d'hier</h4>
+						<div class="easypiechart" id="easypiechart-orange" data-percent="{{expenses_yesterday}}" >
+                            <span class="percent">{{expenses_yesterday}}€</span>
+                        </div>
+					</div>
+				</div>
+            </div>
+            
+
+
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default row rounded card" style="margin-right: 4px;">
+<!-- //Weekly Expense -->
+
+					<div class="panel-body easypiechart-panel">
+						<h4 style="margin-top: 6px;">Dépenses de la semaine</h4>
+						<div class="easypiechart" id="easypiechart-teal" data-percent="{{expenses_week}}">
+                            <span class="percent">{{expenses_week}}€</span>
+                        </div>
+					</div>
+				</div>
+            </div>
+            
+
+
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default row rounded card" style="margin-right: 4px;">
+<!-- //Monthly Expense -->
+
+					<div class="panel-body easypiechart-panel">
+						<h4 style="margin-top: 6px;">Dépenses du mois</h4>
+						<div class="easypiechart" id="easypiechart-red" data-percent="{{expenses_month}}" >
+                            <span class="percent">{{expenses_month}}€</span>
+                        </div>
+					</div>
+				</div>
+			</div>
+		
+        </div>
+        <!-- row -->
+
+
+        
+        <!--/.row-->
+			<div class="row">
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default row rounded card" style="margin-right: 4px;">
+	
+<!-- //Yearly Expense -->
+
+					<div class="panel-body easypiechart-panel">
+						<h4 style="margin-top: 6px;">Dépenses de l'année</h4>
+						<div class="easypiechart" id="easypiechart-red" data-percent="{{expenses_year}}" >
+                            <span class="percent">{{expenses_year}}€</span>
+                        </div>
+
+					</div>
+				
+				</div>
+
+			</div>
+
+
+
+		<div class="col-xs-6 col-md-3">
+            <div class="panel panel-default row rounded card" style="margin-right: 4px;">
+                    
+<!-- //Total income -->
+
+					<div  class="panel-body easypiechart-panel">
+						<h4 style="margin-top: 6px;">Budget global</h4>
+						<div class="easypiechart" style="color:  #1ce;;" data-percent="{{income}}" >
+                            <span class="percent">{{income}}€</span>
+                        </div>
+
+					</div>
+				
+				</div>
+
+			</div>
+
+
+        </div>
+        <div style="margin-top: 34px;" class="col-sm-12">
+            <p class="back-link">Badol, logiciel de gestion budgétaire <a href="https://www.facebook.com/Axel4591">Suivez-nous</a></p>
+        </div>
+		
+        <!--/.row-->
+        <script src="{% static 'js/dashboardJS/jquery-1.11.1.min.js' %}"></script>
+        <script src="{% static 'js/dashboardJS/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/dashboardJS/chart.min.js' %}"></script>
+        <script src="{% static 'js/dashboardJS/chart-data.js' %}"></script>
+        <script src="{% static 'js/dashboardJS/easypiechart.js' %}"></script>
+        <script src="{% static 'js/dashboardJS/easypiechart-data.js' %}"></script>
+        <script src="{% static 'js/dashboardJS/bootstrap-datepicker.js' %}"></script>
+        <script src="{% static 'js/dashboardJS/custom.js' %}"></script>
+ 
+</div>	
+    
+
+      
+{% endblock content %}

@@ -1,3 +1,92 @@
+
+
+p.back-link {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 12px;
+  text-transform: uppercase; }
+h4{
+  color: #444444; }
+
+h1 {
+  font-weight: 300;
+  font-size: 40px; }
+  
+ h4 {
+  font-weight: 300; }
+
+.panel-body input[type=checkbox]:checked + label {
+  text-decoration: line-through;
+  color: #777; }
+
+.panel .border-top, .panel .border-right, .panel .border-bottom, .panel .border-left {
+border-color: #e9ecf2; }
+
+.panel-default .panel-heading {
+  background: #fff;
+  border-bottom: 1px solid #e9ecf2;
+  color: #444444; }
+.panel-blue {
+  background: #30a5ff;
+  color: #fff; }
+
+.panel-teal {
+  background: #1ebfae;
+  color: #fff; }
+
+.panel-orange {
+  background: #ffb53e;
+  color: #fff; }
+
+.panel-red {
+  background: #f9243f;
+  color: #fff; }
+
+.easypiechart-panel {
+  text-align: center;
+  padding: 1px 0;
+  margin-bottom: 20px; }
+
+
+  .easypiechart {
+    position: relative;
+    text-align: center;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto 10px auto; }
+  
+  .easypiechart .percent {
+    display: block;
+    position: absolute;
+    font-size: 26px;
+    top: 38px;
+    width: 120px; }
+  
+  #easypiechart-blue .percent {
+    color: #30a5ff; }
+  
+  #easypiechart-teal .percent {
+    color: #1ebfae; }
+  
+  #easypiechart-orange .percent {
+    color: #ffb53e; }
+  
+  #easypiechart-red .percent {
+    color: #ef4040; }
+
+    h1.page-header {
+      margin-top: 20px;
+      border-bottom: 0; }
+
+
+
+
+
+
+
+
+
+/**************/
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -7,7 +96,7 @@
     user-select: none;
   }
 
-  @media (min-width: 768px) {
+  @media only screen and (min-width: 768px) {
     .bd-placeholder-img-lg {
       font-size: 3.5rem;
     }
