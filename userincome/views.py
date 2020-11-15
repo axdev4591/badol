@@ -311,7 +311,7 @@ def instats_view(request):
 
 
 
-def export_pdf(request):
+def iexport_pdf(request):
     response = HttpResponse(content_type='text/pdf')
     response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
          str(datetime.datetime.now()) + '.pdf'
@@ -320,7 +320,7 @@ def export_pdf(request):
     incomes = UserIncome.objects.filter(owner=request.user)
     sum = incomes.aggregate(Sum('amount'))
 
-    html_string = render_to_string('income/pdf-output.html', {'incomes': incomes, 'total': sum['amount__sum']})
+    html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': sum['amount__sum']})
     html = HTML(string=html_string)
     result =  html.write_pdf()
 
@@ -336,7 +336,7 @@ def export_pdf(request):
 
     
 
-def export_excel(request):
+def iexport_excel(request):
     response = HttpResponse(content_type='text/ms-excel')
     response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
          str(datetime.datetime.now()) + '.xls'
@@ -369,7 +369,7 @@ def export_excel(request):
 
 
 
-def export_csv(request):
+def iexport_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
          str(datetime.datetime.now()) + '.csv'

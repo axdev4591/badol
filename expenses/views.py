@@ -62,7 +62,7 @@ def home(request):
 
 
     expenses_year = Expense.objects.filter(owner=request.user,
-                                      date__gte=a_month_ago, date__lte=todays_date)
+                                      date__gte=a_year_ago, date__lte=todays_date)
     for expense in expenses_year:
         amount_year += expense.amount
 
@@ -381,13 +381,30 @@ def stats_view(request):
 
 
 
+
 def export_pdf(request):
+
+    if request.method == 'POST':
+        hello = ""
+        
+    todays_date = datetime.date.today()
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month]
+    
+    date_start_month = datetime.date(int(year), month, 1)
+    incomes = UserIncome.objects.filter(owner=request.user)
+    expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)
+  
     response = HttpResponse(content_type='text/pdf')
     response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
          str(datetime.datetime.now()) + '.pdf'
 
     response['Content-Transfer-Encoding'] = 'binary'
-    expenses = Expense.objects.filter(owner=request.user)
     sum = expenses.aggregate(Sum('amount'))
 
     html_string = render_to_string('expenses/pdf-output.html', {'expenses': expenses, 'total': sum['amount__sum']})
