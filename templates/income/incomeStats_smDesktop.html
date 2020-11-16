@@ -10,15 +10,12 @@
 
         <div class="form-row align-items-center bilan2" style="background-color: #e9ecef;">
           <div class="col-auto my-1">
-            <label class="mr-sm-2" for="inlineFormCustomSelect" style="color: royalblue;">Critères</label>
-            <select name="critere" class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-              <option name="critere" value="categorie" selected style="color: white;">Catégorie</option>
-              <option name="critere" style="color: white;" value="date">Date</option>
-            </select>
+            <label class="mr-sm-2"  style="color: royalblue;">Début</label>
+            <input type="date"  class="form-control form-control-sm" name="startdate" style="font-size: 1.3em;" value="{{ date6ago | date:'d-m-Y'}}" >
           </div>
           <div class="col-auto my-1">
-            <label class="mr-sm-2"  style="color: royalblue;">Filtre</label>
-            <input type="date"  class="form-control form-control-sm" name="DateSince" style="font-size: 1.3em;" value="{{ date6ago | date:'d-m-Y'}}" >
+            <label class="mr-sm-2"  style="color: royalblue;">Fin</label>
+            <input type="date"  class="form-control form-control-sm" name="enddate" style="font-size: 1.3em;" value="{{ date6ago | date:'d-m-Y'}}" >
           </div>
           
           <div class="col-auto my-1">
