@@ -265,77 +265,18 @@ def expense_category_summary(request):
     date_start_month = datetime.date(int(year), month, 1)
     expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date_start_month, date__lte=todays_date)    
-
-    if request.method == 'POST':        
-        critere = request.POST.get('critere')
-        filtre = request.POST.get('DateSince')
-
-
-        if critere == "date":
-            six_months_ago = todays_date-datetime.timedelta(days=30*6)
-            expenses = Expense.objects.filter(owner=request.user,
-                                      date__gte=six_months_ago, date__lte=todays_date)
-            date_amount = {}
-            list_date_amount = {}
-            if filtre != '':
-                if filtre.split("-")[0] != todays_date.strftime("%d-%b-%Y").split("-")[2]:
-                    messages.error(request, 'Saisissez une date de cette année')
-                expenses = Expense.objects.filter(owner=request.user,
-                                      date__gte=filtre, date__lte=todays_date)
-            
-            def get_Date(expense):
-                return expense.category
-
-            category_list = list(set(map(get_Date, expenses)))
-
-                
-            def get_expense_category_amount(category):
-                filtered_by_category = expenses.filter(category=category)
-
-                for item in filtered_by_category:
-                            date = item.date
-                            date = date.strftime("%d-%b-%Y")
-                            date_amount[date] = item.amount
-       
-
-            def fill_date(date_amount):
-                year = todays_date.strftime("%d-%b-%Y").split("-")[2]
-                list_date_amount_tmp = {"Jan-"+str(year):"0", "Feb-"+str(year):"0", "Mar-"+str(year):"0", 
+    list_date_amount_tmp = {"Jan-"+str(year):"0", "Feb-"+str(year):"0", "Mar-"+str(year):"0", 
                     "Apr-"+str(year):"0", "May-"+str(year):"0", "Jun-"+str(year):"0", "Jul-"+str(year):"0", 
                     "Aug-"+str(year):"0", "Sep-"+str(year):"0", "Oct-"+str(year):"0", "Nov-"+str(year):"0", "Dec-"+str(year):"0"}
+    
+    if request.method == 'POST':        
+        start = request.POST.get('startdate')
+        end = request.POST.get('enddate')
 
 
-                for key in date_amount:                    
-                    month = key.split('-')[1]
-                    year = key.split('-')[2]
-                    
-                    amount =  0
-                    for key in date_amount:
-                        if month in key:
-                            amount += date_amount[key]
-                    for key in  list_date_amount_tmp:
-                        if month in key :
-                            list_date_amount_tmp[key] = amount
-
-                for key, value in list_date_amount_tmp.items():
-                    if list_date_amount_tmp[key] != "0":
-                        list_date_amount[key] = value
-
-
-
-
-
-            for cat in category_list:
-                get_expense_category_amount(cat)
-            fill_date(date_amount)
-            
-        else:
-            list_date_amount = {}
-            if filtre != '':
-                if filtre.split("-")[0] != todays_date.strftime("%d-%b-%Y").split("-")[2]:
-                    messages.error(request, 'Saisissez une date de cette année')
-                expenses = Expense.objects.filter(owner=request.user,
-                                    date__gte=filtre, date__lte=todays_date)       
+        if start & end:
+            expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=start, date__lte=end)     
             
             def get_category(expense):
                 return expense.category
@@ -356,6 +297,8 @@ def expense_category_summary(request):
                     list_date_amount[y] = get_expense_category_amount(y)
 
         return JsonResponse({'expense_data': list_date_amount}, safe=False)
+
+
 
 
     if request.method == 'GET':
