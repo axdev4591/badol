@@ -35,7 +35,7 @@ def index(request):
     versement = Versements.objects.all()
     source =  Source.objects.all()
     
-    income = UserIncome.objects.filter(owner=request.user)order_by('-check_in')
+    income = UserIncome.objects.filter(owner=request.user).order_by('-check_in')
     paginator = Paginator(income, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
