@@ -127,7 +127,7 @@ def search_expenses(request):
 def index(request):
     categories = Category.objects.all()
     payment =  Payment.objects.all()
-    expenses = Expense.objects.filter(owner=request.user)
+    expenses = Expense.objects.filter(owner=request.user).order_by('-check_in')
     paginator = Paginator(expenses, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -254,8 +254,17 @@ def delete_expense(request, id):
 #@csrf_exempt
 def expense_category_summary(request):
     todays_date = datetime.date.today()
-    expenses = Expense.objects.filter(owner=request.user)
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month]
     
+   
+    date_start_month = datetime.date(int(year), month, 1)
+    expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)    
 
     if request.method == 'POST':        
         critere = request.POST.get('critere')
@@ -376,9 +385,18 @@ def expense_category_summary(request):
 @login_required(login_url='/authentication/login')
 def stats_view(request):
     todays_date = datetime.date.today()
-    six_months_ago = todays_date-datetime.timedelta(days=30*6)
-
-    expenses = Expense.objects.filter(owner=request.user)
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month]
+    
+   
+    date_start_month = datetime.date(int(year), month, 1)
+    expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)
+                                      
     categories = Category.objects.all()
     
     try:    

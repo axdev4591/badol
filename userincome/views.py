@@ -35,7 +35,7 @@ def index(request):
     versement = Versements.objects.all()
     source =  Source.objects.all()
     
-    income = UserIncome.objects.filter(owner=request.user)
+    income = UserIncome.objects.filter(owner=request.user)order_by('-check_in')
     paginator = Paginator(income, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -168,7 +168,18 @@ def delete_income(request, id):
 
 def income_category_summary(request):
     todays_date = datetime.date.today()
-    incomes = UserIncome.objects.filter(owner=request.user)
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month]
+    
+   
+    
+    date_start_month = datetime.date(int(year), month, 1)
+    incomes = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)
     
 
     if request.method == 'POST':        
