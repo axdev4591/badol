@@ -23,11 +23,21 @@ from django.db.models import Sum
 def home(request):
     todays_date = datetime.date.today()
     year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month]
     
     yesterday = todays_date-datetime.timedelta(days=1)
     a_week_ago = todays_date-datetime.timedelta(days=7)
-    a_month_ago = todays_date-datetime.timedelta(days=30)
+    #a_month_ago = todays_date-datetime.timedelta(days=30)
     a_year_ago = datetime.date(int(year), 1, 1)
+    incomes = UserIncome.objects.filter(owner=request.user)
+
+   
+    
+    date_start_month = datetime.date(int(year), month, 1)
     incomes = UserIncome.objects.filter(owner=request.user)
 
     amount_today = 0
@@ -56,7 +66,7 @@ def home(request):
 
 
     expenses_month = Expense.objects.filter(owner=request.user,
-                                      date__gte=a_month_ago, date__lte=todays_date)
+                                      date__gte=date_start_month, date__lte=todays_date)
     for expense in expenses_month:
         amount_a_month_ago += expense.amount
 
@@ -76,14 +86,16 @@ def home(request):
         messages.success(request, 'Veuillez configurer votre monnaie')
         return redirect('preferences')
 
+    courant = budget - amount_a_month_ago
 
     context = {
         'expenses_today': "{:.1f}".format(amount_today),
         'expenses_yesterday':  "{:.1f}".format(amount_yesterday),
         'expenses_week': "{:.1f}".format(amount_a_week_ago),
         'expenses_month':"{:.1f}".format(amount_a_month_ago),
-        'expenses_year': "{:.1f}".format(2334.14),
-        'income': "{:.1f}".format(budget)
+        'expenses_year': "{:.1f}".format(amount_year),
+        'income': "{:.1f}".format(budget),
+        'compte_courant': "{:.1f}".format(courant)
     }
 
     return render(request, 'expenses/dashboard_smDesktop.html', context)
