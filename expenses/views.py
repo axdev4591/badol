@@ -76,13 +76,14 @@ def home(request):
         messages.success(request, 'Veuillez configurer votre monnaie')
         return redirect('preferences')
 
+
     context = {
-        'expenses_today': amount_today,
-        'expenses_yesterday': amount_yesterday,
-        'expenses_week': amount_a_week_ago,
-        'expenses_month': amount_a_month_ago,
-        'expenses_year': amount_year,
-        'income': budget
+        'expenses_today': "{:.1f}".format(amount_today),
+        'expenses_yesterday':  "{:.1f}".format(amount_yesterday),
+        'expenses_week': "{:.1f}".format(amount_a_week_ago),
+        'expenses_month':"{:.1f}".format(amount_a_month_ago),
+        'expenses_year': "{:.1f}".format(2334.14),
+        'income': "{:.1f}".format(budget)
     }
 
     return render(request, 'expenses/dashboard.html', context)
@@ -370,7 +371,7 @@ def stats_view(request):
     context = {
         'date6ago':six_months_ago,
         'todays_date':todays_date,
-        'expenseGlobal':expenseGlobal,
+        'expenseGlobal': "{:.1f}".format(expenseGlobal),
         'expenses':expenses,
         'categories': categories,
         'currency': currency

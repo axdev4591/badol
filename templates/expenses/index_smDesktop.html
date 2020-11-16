@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %} 
+<div class="container mt-4"> <!--mt for margin top-->
+   <div class="row">
+    <div class="col-md-10">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bilan2">
+          <li class="breadcrumb-item"><a href="">Dépenses</a></li>
+          <li class="breadcrumb-item" aria-current="page">Mes dépenses</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-md-2">
+      <!--add-expense is the view name given in the urls.py-->
+      <a href="{% url 'add-expense' %}" class="btn btn-outline-primary" style="border-radius: 12px;"> Nouvelle dépense</a>
+    </div>
+   </div>
+
+   <div class="container">
+    {% include 'partials/_messages.html' %}
+     {% if expenses.count %}
+     <div class="row">
+      <div class="col-md-2">
+      <!--add-expense is the view name given in the urls.py-->
+      <a href="{% url 'export-pdf' %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;">Export en PDF</a>
+    </div>
+    <div class="col-md-2">
+      <!--add-expense is the view name given in the urls.py-->
+      <a href="{% url 'export-excel' %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;">Export en Excel</a>
+    </div>
+    <div class="col-md-2" style="margin-right: 184px;">
+      <!--add-expense is the view name given in the urls.py-->
+      <a href="{% url 'export-csv' %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;"> Export en CSV</a>
+    </div>
+      <div class="col-md-4">
+
+        <div class="form-group">
+          <input type="text" class="form-control rounded" id="searchField"  placeholder="Search">
+        </div>
+      </div>
+     </div>
+
+     <div class="app-table card">
+       <table class="table table-stripped table-hover">
+        <thead>
+          <tr style="background-color:  #e9ecef;">
+            <th>Montant ({{currency}})</th>
+            <th>Mode de paiement</th>
+            <th>Categorie</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th></th>
+            <th> <a href="#"><img src="{% static 'img/print.png' %}" width="27" height="26"/>
+            </a>    
+            </th>
+          </tr>
+        </thead>
+
+         <tbody>
+           {% for expense in page_obj %}
+          <tr>
+            <td>{{expense.amount}}</td>
+            <td>{{expense.payment}}</td>
+            <td>{{expense.category}}</td>
+            <td>{{expense.description}}</td>
+            <td>{{expense.date | date:'d-m-Y' }}</td>
+            <td>
+              <a href="{% url 'expense-edit' expense.id %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;"
+              >Editer</a>
+            </td>
+            <td>
+              <span onclick="reply_click(this.id)"  id="{{  expense.id }}" style="cursor: pointer;">
+                <img onclick="document.getElementById('id01').style.display='block'"  src="{% static '/img/delete.png' %}" width="27" height="26"/>
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+       </table>
+     </div>
+  
+     <div id="id01" class="modalDialog">
+      <span onclick="document.getElementById('id01').style.display='none'" class="closeDialog" title="Close Modal">×</span>
+      <div class="modal-contentDialog">
+        <div class="containerDialog">
+          <h1>Suppression de dépenses</h1>
+          <p> Etes-vous sur de vouloir supprimer cette dépense ?</p>
+        
+          <div class="clearfixDialog">
+            <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">NON</button>
+            <a  href=""
+            id = "btndel"> <button class="deletebtn">
+           OUI</button></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <p class="no-results" style="display: none;">Aucun résultat </p>
+          <div class="table-output">
+      
+      
+            <table class="table table-stripped table-hover">
+              <thead>
+                <tr style="background-color: #e9ecef;">
+                  <th>Montant ({{currency}})</th>
+                  <th>Mode de paiement</th>
+                  <th>Categorie</th>
+                  <th>Description</th>
+                  <th>Date</th>
+                  <th></th>
+                  <th> <a href="#"><img src="{% static 'img/print.png' %}" width="27" height="26"/></a> </th> 
+                </tr>
+              </thead>
+      
+              <tbody  class="table-body">
+      
+              </tbody>
+            </table>
+          </div>
+  
+        
+      <div class="pagination-container">
+          <div class="">
+             Page {{page_obj.number}} of {{ page_obj.paginator.num_pages }}
+          </div>
+          <ul class="pagination align-right float-right mr-auto">
+            {% if page_obj.has_previous %}
+            <li {% if page_obj.number == 1 %} class="page-item active" {% endif %}><a class="page-link" href="?page=1">&laquo; 1</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+       
+            {% if page_obj.has_next %}
+            <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            <li class="page-item"> <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages}} &raquo;</a></li>
+            {% endif %}
+      
+      
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+      </div>
+      
+      <script src="{% static 'js/dialogEx.js' %}"></script>
+      <script src="{% static 'js/searchExpenses.js' %}"></script>
+      
+      
+      
+      
+      </script>
+{% endblock content %}
