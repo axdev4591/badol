@@ -53,7 +53,7 @@ var resetCanvas = function(){
     
         title: {
             display: true,
-            text: "Statistique des dépenses",
+            text: "Statistiques mensuelles des dépenses",
             fontSize: 18,
             color:'#00ccff'
         },
@@ -178,7 +178,6 @@ var resetCanvas = function(){
         
           };
          
-
 
   const renderChart4 = (data, labels) =>{
 

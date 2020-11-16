@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
       
           title: {
               display: true,
-              text: "Statistique des revenus",
+              text: "Statistiques mensuelles des revenus",
               fontSize: 18,
               color:'#00ccff'
           },
