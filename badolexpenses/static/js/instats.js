@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", function() {
   checkMethod = document.getElementById("checkMethod");
   var ctxP = "";
   var ctxP2 = "";
-  var ctxP3 = "";
   var ctxP4 = "";
   var mlabels = "";
   var mdata = "";
@@ -19,11 +18,8 @@ document.addEventListener("DOMContentLoaded", function() {
     $('#myChart2').remove();
     $('#pc2').append('<canvas id="myChart2" width="50" height="50"></canvas>');
   
-    $('#myChart3').remove();
-    $('#pc3').append('<canvas id="myChart3" width="800" height="400"></canvas>');
-  
     $('#myChart4').remove();
-    $('#pc4').append('<canvas id="myChart4" width="48" height="50"></canvas>');
+    $('#pc4').append('<canvas id="myChart4" width="50" height="50"></canvas>');
   
     
   };
@@ -182,77 +178,7 @@ document.addEventListener("DOMContentLoaded", function() {
           });
           
             };
-           
-    const renderChart3 = (data, labels) =>{
-      
-              var myPieChart = new Chart(ctxP3, {
-                plugins: [ChartDataLabels],
-                type: 'bar',
-                data: {
-                  labels: labels,
-                  datasets: [{
-                    label: "montant",
-  
-                    data: data,
-                    backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)'
-                  ],
-                  borderColor: [
-                      'rgba(255, 99, 132, 1)',
-                      'rgba(54, 162, 235, 1)',
-                      'rgba(255, 206, 86, 1)',
-                      'rgba(75, 192, 192, 1)',
-                      'rgba(153, 102, 255, 1)',
-                      'rgba(255, 159, 64, 1)'
-                  ]
-                  }],
-                  borderWidth: 1
-                },
-                options: {
-              
-                  title: {
-                      display: true,
-                      fontSize: 25,
-                  },
-                  
-                  responsive: true,
-                  legend: {
-                    position: 'left',
-                    labels: {
-                      padding: 20,
-                      boxWidth: 10
-                    }
-                  },
-                  plugins: {
-                    datalabels: {
-                      formatter: (value, ctx) => {
-                        let sum = 0;
-                        let dataArr = ctx.chart.data.datasets[0].data;
-                        dataArr.map(data => {
-                          sum += data;
-                        });
-                        let percentage = (value * 100 / sum).toFixed(2) + "%";
-                        return percentage;
-                      },
-                      color: 'black',
-                      labels: {
-                        title: {
-                          font: {
-                            size: '16'
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              });
-              
-                };
+
   
     const renderChart4 = (data, labels) =>{
   
@@ -346,12 +272,10 @@ document.addEventListener("DOMContentLoaded", function() {
             resetCanvas();
             ctxP = document.getElementById("myChart").getContext('2d');
             ctxP2 = document.getElementById("myChart2").getContext('2d');
-            ctxP3 = document.getElementById("myChart3").getContext('2d');
             ctxP4 = document.getElementById("myChart4").getContext('2d');
   
             renderChart(mdata, mlabels); 
             renderChart2(mdata, mlabels);
-            renderChart3(mdata, mlabels); 
             renderChart4(mdata, mlabels); 
   
             }
@@ -398,12 +322,10 @@ document.addEventListener("DOMContentLoaded", function() {
             resetCanvas();
             ctxP = document.getElementById("myChart").getContext('2d');
             ctxP2 = document.getElementById("myChart2").getContext('2d');
-            ctxP3 = document.getElementById("myChart3").getContext('2d');
             ctxP4 = document.getElementById("myChart4").getContext('2d');
   
             renderChart(mdata, mlabels); 
             renderChart2(mdata, mlabels);
-            renderChart3(mdata, mlabels); 
             renderChart4(mdata, mlabels);  
             }
         }).
