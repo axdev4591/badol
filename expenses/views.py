@@ -127,7 +127,7 @@ def search_expenses(request):
 def index(request):
     categories = Category.objects.all()
     payment =  Payment.objects.all()
-    expenses = Expense.objects.filter(owner=request.user).order_by('-check_in')
+    expenses = Expense.objects.filter(owner=request.user).order_by('-id')
     paginator = Paginator(expenses, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -396,7 +396,7 @@ def stats_view(request):
     date_start_month = datetime.date(int(year), month, 1)
     expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date_start_month, date__lte=todays_date)
-                                      
+
     categories = Category.objects.all()
     
     try:    
