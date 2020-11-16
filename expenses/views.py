@@ -33,12 +33,12 @@ def home(request):
     a_week_ago = todays_date-datetime.timedelta(days=7)
     #a_month_ago = todays_date-datetime.timedelta(days=30)
     a_year_ago = datetime.date(int(year), 1, 1)
-    incomes = UserIncome.objects.filter(owner=request.user)
-
    
     
     date_start_month = datetime.date(int(year), month, 1)
     incomes = UserIncome.objects.filter(owner=request.user)
+    allexpenses = Expense.objects.filter(owner=request.user)
+
 
     amount_today = 0
     amount_yesterday = 0
@@ -46,6 +46,8 @@ def home(request):
     amount_a_month_ago = 0
     amount_year = 0
     budget = 0
+    allexpense = 0
+    budgetAnuelle = 0
 
     expenses_today = Expense.objects.filter(owner=request.user,
                                       date__gte=todays_date, date__lte=todays_date)
@@ -73,11 +75,20 @@ def home(request):
 
     expenses_year = Expense.objects.filter(owner=request.user,
                                       date__gte=a_year_ago, date__lte=todays_date)
+    income_year = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=a_year_ago, date__lte=todays_date)
     for expense in expenses_year:
         amount_year += expense.amount
 
     for income in incomes:
         budget += income.amount
+    
+    for income in income_year:
+        budgetAnuelle += income.amount
+
+    for exp in allexpenses:
+        allexpense += exp.amount
+        
 
 
     try:    
@@ -86,7 +97,7 @@ def home(request):
         messages.success(request, 'Veuillez configurer votre monnaie')
         return redirect('preferences')
 
-    courant = budget - amount_a_month_ago
+    courant = budget - allexpense
 
     context = {
         'expenses_today': "{:.1f}".format(amount_today),
@@ -94,7 +105,7 @@ def home(request):
         'expenses_week': "{:.1f}".format(amount_a_week_ago),
         'expenses_month':"{:.1f}".format(amount_a_month_ago),
         'expenses_year': "{:.1f}".format(amount_year),
-        'income': "{:.1f}".format(budget),
+        'income_year': "{:.1f}".format(budgetAnuelle),
         'compte_courant': "{:.1f}".format(courant)
     }
 
