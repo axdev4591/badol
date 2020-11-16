@@ -275,16 +275,16 @@ def income_category_summary(request):
         finalrep = {}
 
         def get_source(income):
-            return income.categories
+            return income.source
 
         category_list = list(set(map(get_source, incomes)))
 
 
-        def get_income_source_amount(category):
+        def get_income_source_amount(source):
             amount = 0
-            filtered_by_category = incomes.filter(categories=category)
+            filtered_by_source = incomes.filter(source=source)
 
-            for item in filtered_by_category:
+            for item in filtered_by_source:
                 amount += item.amount
             return amount
 
@@ -297,9 +297,21 @@ def income_category_summary(request):
 
 @login_required(login_url='/authentication/login')
 def instats_view(request):
+    todays_date = datetime.date.today()
+
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month]
+       
+    
+    date_start_month = datetime.date(int(year), month, 1)
+    income = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)
 
     categories = Categories.objects.all()
-    income = UserIncome.objects.filter(owner=request.user)
    
     try:    
         currency = UserPreference.objects.get(user=request.user).currency
