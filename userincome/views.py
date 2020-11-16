@@ -249,13 +249,13 @@ def income_category_summary(request):
                 incomes = UserIncome.objects.filter(owner=request.user,
                                     date__gte=filtre, date__lte=todays_date)       
             
-            def get_category(income):
-                return income.categories
+            def get_source(income):
+                return income.source
 
-            category_list = list(set(map(get_category, incomes)))
+            category_list = list(set(map(get_source, incomes)))
 
 
-            def get_income_category_amount(category):
+            def get_income_source_amount(category):
                 amount = 0
                 filtered_by_category = incomes.filter(categories=category)
 
@@ -265,7 +265,7 @@ def income_category_summary(request):
 
             for x in incomes:
                 for y in category_list:
-                    list_date_amount[y] = get_income_category_amount(y)
+                    list_date_amount[y] = get_income_source_amount(y)
 
         return JsonResponse({'income_data': list_date_amount}, safe=False)
 
@@ -274,13 +274,13 @@ def income_category_summary(request):
         
         finalrep = {}
 
-        def get_category(income):
+        def get_source(income):
             return income.categories
 
-        category_list = list(set(map(get_category, incomes)))
+        category_list = list(set(map(get_source, incomes)))
 
 
-        def get_income_category_amount(category):
+        def get_income_source_amount(category):
             amount = 0
             filtered_by_category = incomes.filter(categories=category)
 
@@ -290,7 +290,7 @@ def income_category_summary(request):
 
         for x in incomes:
             for y in category_list:
-                finalrep[y] = get_income_category_amount(y)
+                finalrep[y] = get_income_source_amount(y)
         
         return JsonResponse({'income_data': finalrep}, safe=False)
 
