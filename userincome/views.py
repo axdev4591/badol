@@ -301,7 +301,7 @@ def instats_view(request):
         budget += item.amount
         
     context = {
-        'budget': budget,
+        'budget': "{:.1f}".format(budget),
         'income': income,
         'categories': categories,
         'currency': currency
