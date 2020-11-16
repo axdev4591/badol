@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block content %} 
-<div style="margin-left: 49px; font-weight: bold;" class="row">
+<div style="margin-left: 29px; font-weight: bold;" class="row">
     <div class="col-lg-12">
         <h1 class="page-header">Votre finances en un clin d'oeil</h1>
     </div>
 </div><!--/.row-->
-<div style="margin-top: 10px;" class="container">
+<div style="margin-top: 27px;" class="container">
       		
 {% include 'partials/_messages.html' %}
 
@@ -65,7 +65,7 @@
 
 					<div class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Dépenses du mois</h4>
-						<div class="easypiechart" style="color: #008B8B;" data-percent="{{expenses_month}}" >
+						<div class="easypiechart" id="easypiechart-red" data-percent="{{expenses_month}}" >
                             <span class="percent">{{expenses_month}}€</span>
                         </div>
 					</div>
@@ -86,7 +86,7 @@
 
 					<div class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Dépenses de l'année</h4>
-						<div class="easypiechart" id="easypiechart-red" data-percent="{{expenses_year}}" >
+						<div class="easypiechart" style="color:red;" data-percent="{{expenses_year}}" >
                             <span class="percent">{{expenses_year}}€</span>
                         </div>
 
@@ -105,7 +105,7 @@
 
 					<div  class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Budget global</h4>
-						<div class="easypiechart" style="color:  #1ce;;" data-percent="{{income}}" >
+						<div class="easypiechart" style="color:  #1ce;" data-percent="{{income}}" >
                             <span class="percent">{{income}}€</span>
                         </div>
 
