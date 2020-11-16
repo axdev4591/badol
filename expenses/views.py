@@ -86,7 +86,7 @@ def home(request):
         'income': "{:.1f}".format(budget)
     }
 
-    return render(request, 'expenses/dashboard.html', context)
+    return render(request, 'expenses/dashboard_smDesktop.html', context)
 
 def search_expenses(request):
     if request.method == 'POST':
@@ -121,7 +121,7 @@ def index(request):
         'currency': currency
     }
 
-    return render(request, 'expenses/index.html', context)
+    return render(request, 'expenses/index_smDesktop.html', context)
 
 @login_required(login_url='/authentication/login')
 def add_expense(request):
@@ -378,7 +378,7 @@ def stats_view(request):
     }
 
     
-    return render(request, 'expenses/stats.html', context)
+    return render(request, 'expenses/stats_smDesktop.html', context)
 
 
 

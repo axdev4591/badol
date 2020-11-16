@@ -51,7 +51,7 @@ def index(request):
         'page_obj': page_obj,
         'currency': currency
     }
-    return render(request, 'income/index.html', context)
+    return render(request, 'income/index_smDesktop.html', context)
 
 
 @login_required(login_url='/authentication/login')
@@ -306,7 +306,7 @@ def instats_view(request):
         'categories': categories,
         'currency': currency
     }
-    return render(request, 'income/incomeStats.html', context)
+    return render(request, 'income/incomeStats_smDesktop.html', context)
 
 
 
