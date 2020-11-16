@@ -410,7 +410,7 @@ def stats_view(request):
         expenseGlobal += item.amount
 
     context = {
-        'date6ago':six_months_ago,
+        'date6ago':date_start_month,
         'todays_date':todays_date,
         'expenseGlobal': "{:.1f}".format(expenseGlobal),
         'expenses':expenses,
