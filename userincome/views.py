@@ -190,7 +190,7 @@ def income_category_summary(request):
                                       date__gte=start, date__lte=end)     
             
             def get_category(income):
-            return income.categories
+                return income.categories
 
             category_list = list(set(map(get_category, incomes)))
 
@@ -199,9 +199,9 @@ def income_category_summary(request):
                 amount = 0
                 filtered_by_category = incomes.filter(categories=category)
 
-            for item in filtered_by_category:
-                amount += item.amount
-            return amount
+                for item in filtered_by_category:
+                    amount += item.amount
+                return amount
 
             for x in incomes:
                 for y in category_list:
