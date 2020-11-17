@@ -336,9 +336,13 @@ def iexport_pdf(request):
     expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date_start_month, date__lte=todays_date)
 
-    sum = incomes.aggregate(Sum('amount')) - expenses.aggregate(Sum('amount'))
+    sum = incomes.aggregate(Sum('amount'))
+    buget1 = sum['amount__sum']
+    sum = expenses.aggregate(Sum('amount'))
+    budget = buget1 + sum['amount__sum']
+    
 
-    html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': sum['amount__sum']})
+    html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': budget)
     html = HTML(string=html_string)
     result =  html.write_pdf()
 
