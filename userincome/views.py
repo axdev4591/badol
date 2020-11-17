@@ -321,8 +321,21 @@ def iexport_pdf(request):
          str(datetime.datetime.now()) + '.pdf'
 
     response['Content-Transfer-Encoding'] = 'binary'
-    incomes = UserIncome.objects.filter(owner=request.user)
-    sum = incomes.aggregate(Sum('amount'))
+    todays_date = datetime.date.today()
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month]
+    
+    date_start_month = datetime.date(int(year), month, 1)
+    incomes = UserIncome.objects.filter(owner=request.user, 
+                                      date__gte=date_start_month, date__lte=todays_date)
+    expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)
+
+    sum = incomes.aggregate(Sum('amount')) - expenses.aggregate(Sum('amount'))
 
     html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': sum['amount__sum']})
     html = HTML(string=html_string)

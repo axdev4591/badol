@@ -423,7 +423,6 @@ def export_pdf(request):
     month = year_list[month]
     
     date_start_month = datetime.date(int(year), month, 1)
-    incomes = UserIncome.objects.filter(owner=request.user)
     expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date_start_month, date__lte=todays_date)
   
