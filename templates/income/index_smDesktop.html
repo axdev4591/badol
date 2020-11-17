@@ -38,12 +38,10 @@
         <!--add-expense is the view name given in the urls.py-->
         <a href="{% url 'iexport-excel' %}" class="btn btn-outline-info btn-sm" style="border-radius: 12px;">Export en Excel</a>
       </div>
-      <div class="col-md-1" style="margin-right: 161px;">
-        <!--add-expense is the view name given in the urls.py-->
-        <a href="{% url 'iexport-csv' %}" class="btn btn-outline-info btn-sm" style="border-radius: 12px;"> Export en CSV</a>
-      </div>
+    
 
-     <form id="formexport">
+     <form class="form-row align-items-center bilan2" id="formexport">
+    
         <div class="col-auto my-1">
           <label class="mr-sm-2"  style="color: royalblue;">Début</label>
           <input type="date"  class="form-control form-control-sm" name="startdate" style="font-size: 1.3em;" value="{{ date6ago | date:'d-m-Y'}}" >
