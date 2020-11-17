@@ -182,7 +182,7 @@ def income_category_summary(request):
     sum_CC = 0
     sum_EP = 0
         
-
+    """
     def manage_income(incomes):
         for income in incomes:
             if income.source == EP and income.categories == CC:
@@ -191,7 +191,7 @@ def income_category_summary(request):
             elif income.source == CC and income.categories == EP:
                 sum_EP = sum_EP + income.amount
                 sum_CC = = sum_CC - income.amount
-    
+    """
     
 
     if request.method == 'POST':        
@@ -261,14 +261,14 @@ def income_category_summary(request):
         for x in incomes:
             for y in category_list:
                 finalrep[y] = get_income_category_amount(y)
-
+        """
         if CC in category_list and EP in category_list:
             sum_CC = get_income_category_amount(CC)
             sum_EP = get_income_category_amount(EP)
             manage_income(incomes)
             finalrep[CC] = sum_CC
             finalrep[EP] = sum_EP
-        
+        """
         return JsonResponse({'income_data': finalrep}, safe=False)
 
 
