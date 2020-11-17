@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from weasyprint import HTML
 import tempfile
 from django.db.models import Sum
+from expenses.models import Expense
 
 
 def search_income(request):
