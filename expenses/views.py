@@ -433,7 +433,7 @@ def export_pdf(request):
     response['Content-Transfer-Encoding'] = 'binary'
     sum = expenses.aggregate(Sum('amount'))
 
-    html_string = render_to_string('expenses/pdf-output.html', {'expenses': expenses, 'total': sum['amount__sum']})
+    html_string = render_to_string('expenses/pdf-output.html', {'expenses': expenses, 'total': "{:.1f}".format(sum['amount__sum'])})
     html = HTML(string=html_string)
     result =  html.write_pdf()
 

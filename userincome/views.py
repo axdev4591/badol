@@ -342,7 +342,7 @@ def iexport_pdf(request):
     budget = buget1 - sum['amount__sum']
     
 
-    html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': budget})
+    html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': "{:.1f}".format(budget)})
     html = HTML(string=html_string)
     result =  html.write_pdf()
 
