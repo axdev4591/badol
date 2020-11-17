@@ -175,64 +175,64 @@ def income_category_summary(request):
                     "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
     month = year_list[month]
     
-   
     
     date_start_month = datetime.date(int(year), month, 1)
-    incomes = UserIncome.objects.filter(owner=request.user,
-                                      date__gte=date_start_month, date__lte=todays_date)
+    
     
 
     if request.method == 'POST':        
         start = request.POST.get('startdate')
         end = request.POST.get('enddate')
-
+        finalrep = {}
 
         if start & end:
             incomes = UserIncome.objects.filter(owner=request.user,
                                       date__gte=start, date__lte=end)     
             
-            def get_source(income):
-                return income.source
+            def get_category(income):
+            return income.categories
 
-            category_list = list(set(map(get_source, incomes)))
+            category_list = list(set(map(get_category, incomes)))
 
 
-            def get_income_source_amount(category):
+            def get_income_category_amount(category):
                 amount = 0
                 filtered_by_category = incomes.filter(categories=category)
 
-                for item in filtered_by_category:
-                    amount += item.amount
-                return amount
+            for item in filtered_by_category:
+                amount += item.amount
+            return amount
 
             for x in incomes:
                 for y in category_list:
-                    list_date_amount[y] = get_income_source_amount(y)
+                    finalrep[y] = get_income_category_amount(y)
 
-        return JsonResponse({'income_data': list_date_amount}, safe=False)
+        return JsonResponse({'income_data': finalrep}, safe=False)
 
 
     if request.method == 'GET':
         
         finalrep = {}
+        incomes = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)
 
-        def get_source(income):
-            return income.source
+        def get_category(income):
+            return income.categories
 
-        category_list = list(set(map(get_source, incomes)))
+        category_list = list(set(map(get_category, incomes)))
 
 
-        def get_income_source_amount(source):
+        def get_income_category_amount(category):
             amount = 0
-            filtered_by_source = incomes.filter(source=source)
+            filtered_by_category = incomes.filter(categories=category)
 
-            for item in filtered_by_source:
+            for item in filtered_by_category:
                 amount += item.amount
             return amount
 
         for x in incomes:
             for y in category_list:
-                finalrep[y] = get_income_source_amount(y)
+                finalrep[y] = get_income_category_amount(y)
         
         return JsonResponse({'income_data': finalrep}, safe=False)
 

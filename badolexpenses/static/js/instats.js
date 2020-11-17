@@ -178,8 +178,7 @@ document.addEventListener("DOMContentLoaded", function() {
           });
           
             };
-
-  
+ 
     const renderChart4 = (data, labels) =>{
   
       var myPieChart = new Chart(ctxP4, {
@@ -297,8 +296,8 @@ document.addEventListener("DOMContentLoaded", function() {
    *************************/
   
   
-    // mettre ici le code à exécuter
-    var myform = document.getElementById("imyform");
+  // mettre ici le code à exécuter
+  var myform = document.getElementById("imyform");
   
   myform.addEventListener('submit', function(e) {
        checkMethod.innerHTML = "True"

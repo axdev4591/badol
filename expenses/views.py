@@ -299,8 +299,6 @@ def expense_category_summary(request):
         return JsonResponse({'expense_data': list_date_amount}, safe=False)
 
 
-
-
     if request.method == 'GET':
         
         finalrep = {}
@@ -324,6 +322,7 @@ def expense_category_summary(request):
                 finalrep[y] = get_expense_category_amount(y)
         
         return JsonResponse({'expense_data': finalrep}, safe=False)
+
 
 @login_required(login_url='/authentication/login')
 def stats_view(request):
