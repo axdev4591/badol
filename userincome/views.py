@@ -177,6 +177,20 @@ def income_category_summary(request):
     
     
     date_start_month = datetime.date(int(year), month, 1)
+    CC = "Compte courant"
+    EP =  "Epargne"
+    sum_CC = 0
+    sum_EP = 0
+        
+
+    def manage_income(incomes):
+        for income in incomes:
+            if income.source == EP and income.categories == CC:
+                sum_EP = sum_EP - income.amount
+                sum_CC = = sum_CC + income.amount
+            elif income.source == CC and income.categories == EP:
+                sum_EP = sum_EP + income.amount
+                sum_CC = = sum_CC - income.amount
     
     
 
@@ -184,8 +198,9 @@ def income_category_summary(request):
         start = request.POST.get('startdate')
         end = request.POST.get('enddate')
         finalrep = {}
+             
 
-        if start & end:
+        if start and end:
             incomes = UserIncome.objects.filter(owner=request.user,
                                       date__gte=start, date__lte=end)     
             
@@ -206,6 +221,19 @@ def income_category_summary(request):
             for x in incomes:
                 for y in category_list:
                     finalrep[y] = get_income_category_amount(y)
+            
+            if CC in category_list and EP in category_list:
+                sum_CC = get_income_category_amount(CC)
+                sum_EP = get_income_category_amount(EP)
+                manage_income(incomes)
+                finalrep[CC] = sum_CC
+                finalrep[EP] = sum_EP
+
+        else:
+            messages.success(request, 'Veuillez les champs date')
+            instats_view(request)
+
+
 
         return JsonResponse({'income_data': finalrep}, safe=False)
 
@@ -233,6 +261,13 @@ def income_category_summary(request):
         for x in incomes:
             for y in category_list:
                 finalrep[y] = get_income_category_amount(y)
+
+        if CC in category_list and EP in category_list:
+            sum_CC = get_income_category_amount(CC)
+            sum_EP = get_income_category_amount(EP)
+            manage_income(incomes)
+            finalrep[CC] = sum_CC
+            finalrep[EP] = sum_EP
         
         return JsonResponse({'income_data': finalrep}, safe=False)
 
