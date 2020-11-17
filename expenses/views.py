@@ -36,7 +36,7 @@ def home(request):
    
     
     date_start_month = datetime.date(int(year), month, 1)
-    incomes = UserIncome.objects.filter(owner=request.user)
+    Allincomes = UserIncome.objects.filter(owner=request.user)
     allexpenses = Expense.objects.filter(owner=request.user)
 
 
@@ -45,9 +45,43 @@ def home(request):
     amount_a_week_ago = 0
     amount_a_month_ago = 0
     amount_year = 0
-    budget = 0
     allexpense = 0
     budgetAnuelle = 0
+
+
+    CC = "Compte courant"
+    EP =  "Epargne"
+    list_EP_CC = {}
+
+    incomes = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_month, date__lte=todays_date)
+
+    def get_category(income):
+        return income.categories
+
+    category_list = list(set(map(get_category, incomes)))
+    
+    def get_income_category_amount(category, capital):
+        amount = 0
+        filtered_by_category = capital.filter(categories=category)
+        for item in filtered_by_category:
+            amount += item.amount
+        return amount
+        
+    
+    def manage_income(incomes, sum_CC, sum_EP):
+        
+        for income in incomes:
+            if income.source == EP and income.categories == CC:
+                sum_EP = sum_EP - income.amount
+                sum_CC = sum_CC + income.amount
+            elif income.source == CC and income.categories == EP:
+                sum_CC = sum_CC - income.amount
+                sum_EP = sum_EP + income.amount
+
+        return {'sum_EP':sum_EP, 'sum_CC':sum_CC}
+   
+
 
     expenses_today = Expense.objects.filter(owner=request.user,
                                       date__gte=todays_date, date__lte=todays_date)
@@ -80,16 +114,15 @@ def home(request):
     for expense in expenses_year:
         amount_year += expense.amount
 
-    for income in incomes:
-        budget += income.amount
     
+    #revenu annuelle total
     for income in income_year:
         budgetAnuelle += income.amount
 
+    #dépsnes annuelle
     for exp in allexpenses:
         allexpense += exp.amount
         
-
 
     try:    
         currency = UserPreference.objects.get(user=request.user).currency
@@ -97,7 +130,18 @@ def home(request):
         messages.success(request, 'Veuillez configurer votre monnaie')
         return redirect('preferences')
 
-    courant = budget - allexpense
+
+    if CC in category_list and EP in category_list:
+        sum_CC = get_income_category_amount(CC, Allincomes)
+        sum_EP = get_income_category_amount(EP, Allincomes)
+        list_EP_CC = manage_income(Allincomes, sum_CC, sum_EP)
+        #finalrep[CC] = list_EP_CC['sum_CC']
+        #finalrep[EP] = list_EP_CC['sum_EP']
+        list_EP_CC['sum_CC'] = list_EP_CC['sum_CC'] - allexpense
+    
+    capital = list_EP_CC['sum_CC'] + list_EP_CC['sum_EP']
+
+
 
     context = {
         'expenses_today': "{:.1f}".format(amount_today),
@@ -106,7 +150,9 @@ def home(request):
         'expenses_month':"{:.1f}".format(amount_a_month_ago),
         'expenses_year': "{:.1f}".format(amount_year),
         'income_year': "{:.1f}".format(budgetAnuelle),
-        'compte_courant': "{:.1f}".format(courant)
+        'budgettotal': "{:.1f}".format(capital),
+        'compte_courant': "{:.1f}".format(list_EP_CC['sum_CC']),
+        'epargne': "{:.1f}".format(list_EP_CC['sum_EP']),
     }
 
     return render(request, 'expenses/dashboard_smDesktop.html', context)
