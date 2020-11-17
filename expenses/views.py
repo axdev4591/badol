@@ -74,10 +74,8 @@ def home(request):
         for income in incomes:
             if income.source == EP and income.categories == CC:
                 sum_EP = sum_EP - income.amount
-                sum_CC = sum_CC + income.amount
             elif income.source == CC and income.categories == EP:
                 sum_CC = sum_CC - income.amount
-                sum_EP = sum_EP + income.amount
 
         return {'sum_EP':sum_EP, 'sum_CC':sum_CC}
    
