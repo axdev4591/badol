@@ -135,7 +135,6 @@ def home(request):
         list_EP_CC = manage_income(Allincomes, sum_CC, sum_EP)
         #finalrep[CC] = list_EP_CC['sum_CC']
         #finalrep[EP] = list_EP_CC['sum_EP']
-        list_EP_CC['sum_CC'] = list_EP_CC['sum_CC'] - allexpense
     
     capital = list_EP_CC['sum_CC'] + list_EP_CC['sum_EP']
 
