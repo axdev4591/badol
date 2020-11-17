@@ -22,15 +22,15 @@
     {% include 'partials/_messages.html' %}
      {% if expenses.count %}
      <div class="row">
-      <div class="col-md-2">
+      <div class="col-md-1">
       <!--add-expense is the view name given in the urls.py-->
       <a href="{% url 'export-pdf' %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;">Export en PDF</a>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
       <!--add-expense is the view name given in the urls.py-->
       <a href="{% url 'export-excel' %}" class="btn btn-outline-success btn-sm" style="border-radius: 12px;">Export en Excel</a>
     </div>
-    <form class="form-row align-items-center bilan2"  style="background-color: #e9ecef; margin-right: 158px;" id="formexport">
+    <form class="form-row align-items-center bilan2"  style="background-color: #e9ecef; margin-right: 160px;" id="formexport">
     
       <div class="col-auto my-1">
         <label class="mr-sm-2"  style="color: royalblue;">Début</label>
