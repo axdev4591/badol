@@ -139,7 +139,7 @@
 
 					<div  class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Etat financier</h4>
-						<div class="easypiechart"  data-percent="{{income}}" >
+						<div class="easypiechart" id="easypiechart-red"  data-percent="{{income}}" >
 						{% for item in list_etat_financier %}
 							{% if item.certain  %}
 								<span style="color:darkorchid; font-size: larger;" class="percent">Certain</span>

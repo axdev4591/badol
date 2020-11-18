@@ -294,7 +294,7 @@ def income_category_summary(request):
             return income.categories
 
         category_list_solde = list(set(map(get_category, Allincomes)))
-        if Solde not in category_list_solde:
+        if Solde in category_list_solde:
             finalreponse["Solde {}".format(date_last_month)] = float("{:.2f}".format(last_income))
             finalreponse["Solde {}".format(date_this_month)] = float("{:.2f}".format(income))
             
