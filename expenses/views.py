@@ -175,11 +175,10 @@ def home(request):
 
     list_etat_financier = {"certain": certain, "normal": normal, "critique": critique,  "chaotique": chaotique}
 
-    import pdb
-    pdb.set_trace()
+   
     context = {
         'expenses_today': float("{:.1f}".format(amount_today)),
-        'expenses_yesterday':  float("{:.1f}".format(amount_yesterday)),
+        'expenses_yesterday':  "{:.1f}".format(amount_yesterday),
         'expenses_week': float("{:.1f}".format(amount_a_week_ago)),
         'expenses_month': float("{:.1f}".format(amount_a_month_ago)),
         'expenses_year': float("{:.1f}".format(amount_year)),
