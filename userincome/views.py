@@ -179,19 +179,41 @@ def income_category_summary(request):
     date_this_month = datetime.date(int(year), int(month), int(day))
     date_start_year = datetime.date(int(year), 1, 1)
     date_last_month = ""
+    date_last_month3 = ""
+    date_last_month4 = ""
   
     if month ==  1:
         date_last_month = datetime.date(int(year), 12, int(day))
+        date_last_month3 = datetime.date(int(year), 11, int(day))
+        date_last_month4 = datetime.date(int(year), 10, int(day))
+    elif month == 2 :
+        date_last_month = datetime.date(int(year), 1, int(day))
+        date_last_month3 = datetime.date(int(year), 12, int(day))
+        date_last_month4 = datetime.date(int(year), 11, int(day))
+    elif month == 3 :
+        date_last_month = datetime.date(int(year), 2, int(day))
+        date_last_month3 = datetime.date(int(year), 1, int(day))
+        date_last_month4 = datetime.date(int(year), 12, int(day))
+    elif month == 4 :
+        date_last_month = datetime.date(int(year), 3, int(day))
+        date_last_month3 = datetime.date(int(year), 2, int(day))
+        date_last_month4 = datetime.date(int(year), 1, int(day))
     else:
         date_last_month = datetime.date(int(year), int(month)-1, int(day))
+        date_last_month3 = datetime.date(int(year), int(month)-2, int(day))
+        date_last_month4 = datetime.date(int(year), int(month)-3, int(day))
     
 
     Solde = "Solde"
     income = 0
     expenses = 0
     last_income =0
+    last_income3 = 0
+    last_income4 = 0
     expense = 0
     last_expense = 0
+    last_expense3 = 0
+    last_expense4 = 0
     finalreponse = {}
     finalrep_expense = {}
     finalrep_income = {}
@@ -201,10 +223,22 @@ def income_category_summary(request):
     last_month_incomes = UserIncome.objects.filter(owner=request.user,
                                       date__gte=date_start_year, date__lte=date_last_month)
 
+    last_month_incomes3 = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=date_last_month3)
+    last_month_incomes4 = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=date_last_month4)
+
+
+
     this_month_expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date_start_year, date__lte=todays_date)
     last_month_expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=date_start_year, date__lte=date_last_month)
+
+    last_month_expenses3 = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=date_last_month3)
+    last_month_expenses4 = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=date_last_month4)
 
     Allexpenses = Expense.objects.filter(owner=request.user)
     Allincomes = UserIncome.objects.filter(owner=request.user)
@@ -225,6 +259,22 @@ def income_category_summary(request):
         last_expense += item.amount
 
     last_income = last_income - last_expense
+
+    for item in last_month_incomes3:
+        last_income3 += item.amount    
+
+    for item in last_month_expenses3:
+        last_expense3 += item.amount
+    
+    last_income3 = last_income3 - last_expense3
+
+    for item in last_month_incomes4:
+        last_income4 += item.amount    
+
+    for item in last_month_expenses4:
+        last_expense4 += item.amount
+    
+    last_income4 = last_income4 - last_expense4
 
  
         
@@ -295,8 +345,11 @@ def income_category_summary(request):
 
         category_list_solde = list(set(map(get_category, Allincomes)))
         if Solde in category_list_solde:
+            finalreponse["Solde {}".format(date_last_month4)] = float("{:.2f}".format(last_income4))
+            finalreponse["Solde {}".format(date_last_month3)] = float("{:.2f}".format(last_income3))
             finalreponse["Solde {}".format(date_last_month)] = float("{:.2f}".format(last_income))
             finalreponse["Solde {}".format(date_this_month)] = float("{:.2f}".format(income))
+            
             
            
         else:
