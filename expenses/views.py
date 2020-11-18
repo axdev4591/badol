@@ -106,7 +106,7 @@ def home(request):
     expenses_year = Expense.objects.filter(owner=request.user,
                                       date__gte=a_year_ago, date__lte=todays_date)
 
-    incomes_year = Expense.objects.filter(owner=request.user,
+    incomes_year = UserIncome.objects.filter(owner=request.user,
                                       date__gte=a_year_ago, date__lte=todays_date)
 
     #revenu annuelle
@@ -134,7 +134,7 @@ def home(request):
 
     
     capital = allbudget -  allexpense
-    income_year = income_year - amount_year
+    income_year = income_year
 
     #calcul de l'état financier
     critique = False
@@ -177,13 +177,13 @@ def home(request):
 
    
     context = {
-        'expenses_today': float("{:.1f}".format(amount_today)),
+        'expenses_today': "{:.1f}".format(amount_today),
         'expenses_yesterday':  "{:.1f}".format(amount_yesterday),
-        'expenses_week': float("{:.1f}".format(amount_a_week_ago)),
-        'expenses_month': float("{:.1f}".format(amount_a_month_ago)),
-        'expenses_year': float("{:.1f}".format(amount_year)),
-        'budgetannuelle': float("{:.1f}".format(income_year)),
-        'compte_courant': float("{:.1f}".format(capital)),
+        'expenses_week': "{:.1f}".format(amount_a_week_ago),
+        'expenses_month': "{:.1f}".format(amount_a_month_ago),
+        'expenses_year': "{:.1f}".format(amount_year),
+        'budgetannuelle': "{:.1f}".format(income_year),
+        'compte_courant': "{:.1f}".format(capital),
         'list_etat_financier' : list_etat_financier
     }
 
