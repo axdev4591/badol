@@ -394,9 +394,9 @@ def income_category_summary(request):
             
             for key, value in  finalrep_income.items():
                 if key in finalrep_expense.keys():
-                    finalreponse[key] = value - finalrep_expense[key]
+                    finalreponse[key] = float("{:.2f}".format(value - finalrep_expense[key]))
 
-        
+       
         return JsonResponse({'income_data': finalreponse}, safe=False)
 
 

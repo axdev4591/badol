@@ -397,7 +397,7 @@ def expense_category_summary(request):
 
         for x in expenses:
             for y in category_list:
-                finalrep[y] = get_expense_category_amount(y)
+                finalrep[y] = float("{:.2f}".format(get_expense_category_amount(y)))
         
         return JsonResponse({'expense_data': finalrep}, safe=False)
 
