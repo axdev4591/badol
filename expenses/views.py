@@ -46,11 +46,9 @@ def home(request):
     amount_a_month_ago = 0
     amount_year = 0
     allexpense = 0
-    budgetAnuelle = 0
+    allbudget = 0
+    income_year = 0
 
-
-    CC = "Compte courant"
-    EP =  "Epargne"
     list_EP_CC = {}
 
     incomes = UserIncome.objects.filter(owner=request.user,
@@ -68,7 +66,7 @@ def home(request):
             amount += item.amount
         return amount
         
-    
+    """
     def manage_income(incomes, sum_CC, sum_EP):
         
         for income in incomes:
@@ -79,7 +77,7 @@ def home(request):
 
         return {'sum_EP':sum_EP, 'sum_CC':sum_CC}
    
-
+    """
 
     expenses_today = Expense.objects.filter(owner=request.user,
                                       date__gte=todays_date, date__lte=todays_date)
@@ -107,17 +105,23 @@ def home(request):
 
     expenses_year = Expense.objects.filter(owner=request.user,
                                       date__gte=a_year_ago, date__lte=todays_date)
-    income_year = UserIncome.objects.filter(owner=request.user,
+
+    incomes_year = Expense.objects.filter(owner=request.user,
                                       date__gte=a_year_ago, date__lte=todays_date)
+
+    #revenu annuelle
+    for el in incomes_year:
+        income_year += el.amount
+    #depsnes anuelle
     for expense in expenses_year:
         amount_year += expense.amount
 
     
-    #revenu annuelle total
-    for income in income_year:
-        budgetAnuelle += income.amount
+    #revenu  total
+    for income in Allincomes:
+        allbudget += income.amount
 
-    #dépsnes annuelle
+    #dépsnes total
     for exp in allexpenses:
         allexpense += exp.amount
         
@@ -128,28 +132,60 @@ def home(request):
         messages.success(request, 'Veuillez configurer votre monnaie')
         return redirect('preferences')
 
-
-    if CC in category_list and EP in category_list:
-        sum_CC = get_income_category_amount(CC, Allincomes)
-        sum_EP = get_income_category_amount(EP, Allincomes)
-        list_EP_CC = manage_income(Allincomes, sum_CC, sum_EP)
-        #finalrep[CC] = list_EP_CC['sum_CC']
-        #finalrep[EP] = list_EP_CC['sum_EP']
     
-    capital = list_EP_CC['sum_CC'] + list_EP_CC['sum_EP']
+    capital = allbudget -  allexpense
+    income_year = income_year - amount_year
 
+    #calcul de l'état financier
+    critique = False
+    chaotique = False
+    normal = True
+    certain = False
+    list_etat_financier = {}
 
+    if capital >=  500:
+        certain = True
+        critique = False
+        chaotique = False
+        normal = False
+        certain = False
+        #list_etat_financier = {"certain": "certain"}
+    elif capital <= 500 and capital >= 0:
+        certain = False
+        critique = False
+        chaotique = False
+        normal = True
+        certain = False
+        #list_etat_financier = {"normal": "normal"}
+    else:
+        certain = False
+        critique = True
+        chaotique = False
+        normal = False
+        certain = False
+        #list_etat_financier = {"critique": "critique"}
 
+    if capital < -100:
+        certain = False
+        critique = True
+        chaotique = False
+        normal = False
+        certain = False
+        #list_etat_financier = {"chaotique": "chaotique"}
+
+    list_etat_financier = {"certain": certain, "normal": normal, "critique": critique,  "chaotique": chaotique}
+
+    import pdb
+    pdb.set_trace()
     context = {
-        'expenses_today': "{:.1f}".format(amount_today),
-        'expenses_yesterday':  "{:.1f}".format(amount_yesterday),
-        'expenses_week': "{:.1f}".format(amount_a_week_ago),
-        'expenses_month':"{:.1f}".format(amount_a_month_ago),
-        'expenses_year': "{:.1f}".format(amount_year),
-        'income_year': "{:.1f}".format(budgetAnuelle),
-        'budgettotal': "{:.1f}".format(capital),
-        'compte_courant': "{:.1f}".format(list_EP_CC['sum_CC']),
-        'epargne': "{:.1f}".format(list_EP_CC['sum_EP']),
+        'expenses_today': float("{:.1f}".format(amount_today)),
+        'expenses_yesterday':  float("{:.1f}".format(amount_yesterday)),
+        'expenses_week': float("{:.1f}".format(amount_a_week_ago)),
+        'expenses_month': float("{:.1f}".format(amount_a_month_ago)),
+        'expenses_year': float("{:.1f}".format(amount_year)),
+        'budgetannuelle': float("{:.1f}".format(income_year)),
+        'compte_courant': float("{:.1f}".format(capital)),
+        'list_etat_financier' : list_etat_financier
     }
 
     return render(request, 'expenses/dashboard_smDesktop.html', context)

@@ -171,19 +171,64 @@ def income_category_summary(request):
     todays_date = datetime.date.today()
     year = todays_date.strftime("%d-%b-%Y").split("-")[2]
     month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    day = todays_date.strftime("%d-%b-%Y").split("-")[0]
     year_list = {"Jan":1, "Feb":2, "Mar":3, 
                     "Apr":4, "May":5, "Jun":6, "Jul":7, 
                     "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
-    month = year_list[month]
+    month = year_list[month] 
+    date_this_month = datetime.date(int(year), int(month), int(day))
+    date_start_year = datetime.date(int(year), 1, 1)
+    date_last_month = ""
+  
+    if month ==  1:
+        date_last_month = datetime.date(int(year), 12, int(day))
+    else:
+        date_last_month = datetime.date(int(year), int(month)-1, int(day))
     
-    
-    date_start_month = datetime.date(int(year), month, 1)
-    CC = "Compte courant"
-    EP =  "Epargne"
-    list_EP_CC = {}
-    
+
+    Solde = "Solde"
+    income = 0
+    expenses = 0
+    last_income =0
+    expense = 0
+    last_expense = 0
+    finalreponse = {}
+    finalrep_expense = {}
+    finalrep_income = {}
+
+    this_month_incomes = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=todays_date)
+    last_month_incomes = UserIncome.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=date_last_month)
+
+    this_month_expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=todays_date)
+    last_month_expenses = Expense.objects.filter(owner=request.user,
+                                      date__gte=date_start_year, date__lte=date_last_month)
+
+    Allexpenses = Expense.objects.filter(owner=request.user)
+    Allincomes = UserIncome.objects.filter(owner=request.user)
+
+
+    for item in this_month_incomes:
+        income += item.amount
+
+    for item in this_month_expenses:
+        expenses += item.amount
+
+    income = income - expenses
+
+    for item in last_month_incomes:
+        last_income += item.amount    
+
+    for item in last_month_expenses:
+        last_expense += item.amount
+
+    last_income = last_income - last_expense
+
+ 
         
-    
+    """
     def manage_income(incomes, sum_CC, sum_EP):
         
         for income in incomes:
@@ -194,7 +239,7 @@ def income_category_summary(request):
 
         return {'sum_EP':sum_EP, 'sum_CC':sum_CC}
     
-    
+    """
 
     if request.method == 'POST':        
         start = request.POST.get('startdate')
@@ -242,39 +287,64 @@ def income_category_summary(request):
 
 
     if request.method == 'GET':
-        list_EP_CC = {}
-        finalrep = {}
-        incomes = UserIncome.objects.filter(owner=request.user,
-                                      date__gte=date_start_month, date__lte=todays_date)
 
+
+        # check if solde calculate its income
         def get_category(income):
             return income.categories
 
-        category_list = list(set(map(get_category, incomes)))
+        category_list_solde = list(set(map(get_category, Allincomes)))
+        if Solde not in category_list_solde:
+            finalreponse["Solde {}".format(date_last_month)] = float("{:.2f}".format(last_income))
+            finalreponse["Solde {}".format(date_this_month)] = float("{:.2f}".format(income))
+            
+           
+        else:
+            #income calculation
+            def get_category(income):
+                return income.categories
+
+            category_list = list(set(map(get_category, Allincomes)))
+
+            def get_income_category_amount(category):
+                amount = 0
+                filtered_by_category = Allincomes.filter(categories=category)
+
+                for item in filtered_by_category:
+                    amount += item.amount
+                return amount
+
+            for x in Allincomes:
+                for y in category_list:
+                    finalrep_income[y] = get_income_category_amount(y)
+                
+
+            #Expense calculation                
+            def get_category(expense):
+                return expense.category
+
+            category_list_expense = list(set(map(get_category, Allexpenses)))
 
 
-        def get_income_category_amount(category):
-            amount = 0
-            filtered_by_category = incomes.filter(categories=category)
+            def get_expense_category_amount(category):
+                amount = 0
+                filtered_by_category = Allexpenses.filter(category=category)
 
-            for item in filtered_by_category:
-                amount += item.amount
-            return amount
+                for item in filtered_by_category:
+                    amount += item.amount
+                return amount
 
-        for x in incomes:
-            for y in category_list:
-                finalrep[y] = get_income_category_amount(y)
+            for x in Allexpenses:
+                for y in category_list_expense:
+                    finalrep_expense[y] = get_expense_category_amount(y)
+
+            
+            for key, value in  finalrep_income.items():
+                if key in finalrep_expense.keys():
+                    finalreponse[key] = value - finalrep_expense[key]
+
         
-        if CC in category_list and EP in category_list:
-            sum_CC = get_income_category_amount(CC)
-            sum_EP = get_income_category_amount(EP)
-            list_EP_CC = manage_income(incomes, sum_CC, sum_EP)
-            finalrep[CC] = list_EP_CC['sum_CC']
-            finalrep[EP] = list_EP_CC['sum_EP']
-    
-        #import pdb
-        #pdb.set_trace()
-        return JsonResponse({'income_data': finalrep}, safe=False)
+        return JsonResponse({'income_data': finalreponse}, safe=False)
 
 
 @login_required(login_url='/authentication/login')
@@ -290,8 +360,10 @@ def instats_view(request):
       
     
     date_start_month = datetime.date(int(year), month, 1)
-    income = UserIncome.objects.filter(owner=request.user,
-                                      date__gte=date_start_month, date__lte=todays_date)
+    income = UserIncome.objects.filter(owner=request.user)
+    Allexpenses = Expense.objects.filter(owner=request.user)
+
+  
 
     categories = Categories.objects.all()
    
@@ -304,9 +376,14 @@ def instats_view(request):
     budget = 0
     for item in income:
         budget += item.amount
+
+    expense = 0
+    for item in Allexpenses:
+        expense += item.amount
+    budget = budget - expense
         
     context = {
-        'budget': "{:.1f}".format(budget),
+        'budget': "{:.2f}".format(budget),
         'income': income,
         'categories': categories,
         'currency': currency

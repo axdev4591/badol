@@ -20,7 +20,7 @@
 					<div class="panel-body easypiechart-panel">
 <!-- //Today Expense -->
 
-						<h4 style="margin-top: 6px;">Dépenses d'aujourd'hui</h4>
+						<h4 style="margin-top: 6px;">Dépenses journalier</h4>
 						<div class="easypiechart" id="easypiechart-blue" data-percent="{{expenses_today}}" >
                             <span class="percent">{{expenses_today}}€</span>
                         </div>
@@ -49,7 +49,7 @@
 <!-- //Weekly Expense -->
 
 					<div class="panel-body easypiechart-panel">
-						<h4 style="margin-top: 6px;">Dépenses de la semaine</h4>
+						<h4 style="margin-top: 6px;">Dépenses hebdomadaires</h4>
 						<div class="easypiechart" id="easypiechart-teal" data-percent="{{expenses_week}}">
                             <span class="percent">{{expenses_week}}€</span>
                         </div>
@@ -64,7 +64,7 @@
 <!-- //Monthly Expense -->
 
 					<div class="panel-body easypiechart-panel">
-						<h4 style="margin-top: 6px;">Dépenses du mois</h4>
+						<h4 style="margin-top: 6px;">Dépenses mensuelles</h4>
 						<div class="easypiechart" id="easypiechart-red" data-percent="{{expenses_month}}" >
                             <span class="percent">{{expenses_month}}€</span>
                         </div>
@@ -85,7 +85,7 @@
 <!-- //Yearly Expense -->
 
 					<div class="panel-body easypiechart-panel">
-						<h4 style="margin-top: 6px;">Dépenses de l'année</h4>
+						<h4 style="margin-top: 6px;">Dépenses annuelles</h4>
 						<div class="easypiechart" style="color:red;" data-percent="{{expenses_year}}" >
                             <span class="percent">{{expenses_year}}€</span>
                         </div>
@@ -104,9 +104,9 @@
 <!-- //Total income -->
 
 					<div  class="panel-body easypiechart-panel">
-						<h4 style="margin-top: 6px;">Budget Global</h4>
+						<h4 style="margin-top: 6px;">Gain Annuel</h4>
 						<div class="easypiechart" style="color:  #1ce;" data-percent="{{income}}" >
-                            <span class="percent">{{budgettotal}}€</span>
+                            <span class="percent">{{budgetannuelle}}€</span>
                         </div>
 
 					</div>
@@ -121,7 +121,7 @@
 <!-- //Compte courant income -->
 
 					<div  class="panel-body easypiechart-panel">
-						<h4 style="margin-top: 6px;">Solde courant</h4>
+						<h4 style="margin-top: 6px;">Solde de compte</h4>
 						<div class="easypiechart" style="color:  #1ce;" data-percent="{{income}}" >
                             <span class="percent">{{compte_courant}}€</span>
                         </div>
@@ -138,9 +138,20 @@
 <!-- //Etat du compte -->
 
 					<div  class="panel-body easypiechart-panel">
-						<h4 style="margin-top: 6px;">Epargne</h4>
-						<div class="easypiechart" style="color:darkorchid;" data-percent="{{income}}" >
-                            <span class="percent">{{epargne}}</span>
+						<h4 style="margin-top: 6px;">Etat financier</h4>
+						<div class="easypiechart"  data-percent="{{income}}" >
+						{% for item in list_etat_financier %}
+							{% if item.certain  %}
+								<span style="color:darkorchid; font-size: larger;" class="percent">Certain</span>
+							{% elif item.normal  %}
+								<span style="color:darkgreen; font-size: larger;" class="percent">Normal</span>
+							{% elif item.critique %}
+								<span style="color:dimgrey; font-size: larger;" class="percent">Critique</span>
+							{% elif item.chaotique %}
+								<span  style="color:red; font-size: larger;" class="percent">Chaotique</span>
+							{% endif %}
+						{% endfor %}
+                            
                         </div>
 
 					</div>
