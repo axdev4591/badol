@@ -14,6 +14,7 @@ from weasyprint import HTML
 import tempfile
 from django.db.models import Sum
 from expenses.models import Expense
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 
 def search_income(request):
@@ -35,8 +36,43 @@ def index(request):
     categories = Categories.objects.all()
     versement = Versements.objects.all()
     source =  Source.objects.all()
+
+    todays_date = datetime.date.today()
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    day = todays_date.strftime("%d-%b-%Y").split("-")[0]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month] 
+    date_this_month = datetime.date(int(year), int(month), int(day))
+    date_start_year = datetime.date(int(year), 1, 1)
+    date_last_month = ""
+    date_last_month2 = ""
+    date_last_month3 = ""
+  
+    if month ==  1:
+        date_last_month = datetime.date(int(year), 12, int(day))
+        date_last_month2 = datetime.date(int(year), 11, int(day))
+        date_last_month3 = datetime.date(int(year), 10, int(day))
+    elif month == 2 :
+        date_last_month = datetime.date(int(year), 1, int(day))
+        date_last_month2 = datetime.date(int(year), 12, int(day))
+        date_last_month3 = datetime.date(int(year), 11, int(day))
+    elif month == 3 :
+        date_last_month = datetime.date(int(year), 2, int(day))
+        date_last_month2 = datetime.date(int(year), 1, int(day))
+        date_last_month3 = datetime.date(int(year), 12, int(day))
+    elif month == 4 :
+        date_last_month = datetime.date(int(year), 3, int(day))
+        date_last_month2 = datetime.date(int(year), 2, int(day))
+        date_last_month3 = datetime.date(int(year), 1, int(day))
+    else:
+        date_last_month = datetime.date(int(year), int(month)-1, int(day))
+        date_last_month2 = datetime.date(int(year), int(month)-2, int(day))
+        date_last_month3 = datetime.date(int(year), int(month)-3, int(day))
     
-    income = UserIncome.objects.filter(owner=request.user).order_by('-id')
+    income = UserIncome.objects.filter(owner=request.user,  date__gte=date_last_month3, date__lte=todays_date).order_by('-id')
     paginator = Paginator(income, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -302,30 +338,62 @@ def income_category_summary(request):
             incomes = UserIncome.objects.filter(owner=request.user,
                                       date__gte=start, date__lte=end)     
             
+                # check if solde calculate its income
             def get_category(income):
                 return income.categories
-
-            category_list = list(set(map(get_category, incomes)))
-
-
-            def get_income_category_amount(category):
-                amount = 0
-                filtered_by_category = incomes.filter(categories=category)
-
-                for item in filtered_by_category:
-                    amount += item.amount
-                return amount
-
-            for x in incomes:
-                for y in category_list:
-                    finalrep[y] = get_income_category_amount(y)
             
-            if CC in category_list and EP in category_list:
-                sum_CC = get_income_category_amount(CC)
-                sum_EP = get_income_category_amount(EP)
-                list_EP_CC = manage_income(incomes)
-                finalrep[CC] = list_EP_CC['sum_CC']
-                finalrep[EP] = list_EP_CC['sum_EP']
+            category_list_solde = list(set(map(get_category, Allincomes)))
+            if Solde in category_list_solde:
+                finalreponse["Solde {}".format(date_last_month4)] = float("{:.2f}".format(last_income4))
+                finalreponse["Solde {}".format(date_last_month3)] = float("{:.2f}".format(last_income3))
+                finalreponse["Solde {}".format(date_last_month)] = float("{:.2f}".format(last_income))
+                finalreponse["Solde {}".format(date_this_month)] = float("{:.2f}".format(income))
+        
+            else:
+                #income calculation
+                def get_category(income):
+                    return income.categories
+
+                category_list_income = list(set(map(get_category, Allincomes)))
+
+                def get_income_category_amount(category):
+                    amount = 0
+                    filtered_by_category = Allincomes.filter(categories=category)
+
+                    for item in filtered_by_category:
+                        amount += item.amount
+                    return amount
+
+                for x in Allincomes:
+                    for y in category_list_income:
+                        finalrep_income[y] = get_income_category_amount(y)
+                    
+
+                #Expense calculation                
+                def get_category(expense):
+                    return expense.category
+
+                category_list_expense = list(set(map(get_category, Allexpenses)))
+
+
+                def get_expense_category_amount(category):
+                    amount = 0
+                    filtered_by_category = Allexpenses.filter(category=category)
+
+                    for item in filtered_by_category:
+                        amount += item.amount
+                    return amount
+
+                for x in Allexpenses:
+                    for y in category_list_expense:
+                        finalrep_expense[y] = get_expense_category_amount(y)
+
+                
+                for key, value in  finalrep_income.items():
+                    if key in finalrep_expense.keys():
+                        finalreponse[key] = float("{:.2f}".format(value - finalrep_expense[key]))
+                    else:
+                        finalreponse[key] = float("{:.2f}".format(value))
 
         else:
             messages.success(request, 'Veuillez les champs date')
@@ -342,22 +410,20 @@ def income_category_summary(request):
         # check if solde calculate its income
         def get_category(income):
             return income.categories
-
+        
         category_list_solde = list(set(map(get_category, Allincomes)))
         if Solde in category_list_solde:
             finalreponse["Solde {}".format(date_last_month4)] = float("{:.2f}".format(last_income4))
             finalreponse["Solde {}".format(date_last_month3)] = float("{:.2f}".format(last_income3))
             finalreponse["Solde {}".format(date_last_month)] = float("{:.2f}".format(last_income))
             finalreponse["Solde {}".format(date_this_month)] = float("{:.2f}".format(income))
-            
-            
-           
+      
         else:
             #income calculation
             def get_category(income):
                 return income.categories
 
-            category_list = list(set(map(get_category, Allincomes)))
+            category_list_income = list(set(map(get_category, Allincomes)))
 
             def get_income_category_amount(category):
                 amount = 0
@@ -368,7 +434,7 @@ def income_category_summary(request):
                 return amount
 
             for x in Allincomes:
-                for y in category_list:
+                for y in category_list_income:
                     finalrep_income[y] = get_income_category_amount(y)
                 
 
@@ -395,8 +461,10 @@ def income_category_summary(request):
             for key, value in  finalrep_income.items():
                 if key in finalrep_expense.keys():
                     finalreponse[key] = float("{:.2f}".format(value - finalrep_expense[key]))
-
-       
+                else:
+                    finalreponse[key] = float("{:.2f}".format(value))
+            
+          
         return JsonResponse({'income_data': finalreponse}, safe=False)
 
 
@@ -445,13 +513,10 @@ def instats_view(request):
 
 
 
-
+@csrf_exempt
 def iexport_pdf(request):
-    response = HttpResponse(content_type='text/pdf')
-    response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
-         str(datetime.datetime.now()) + '.pdf'
 
-    response['Content-Transfer-Encoding'] = 'binary'
+   
     todays_date = datetime.date.today()
     year = todays_date.strftime("%d-%b-%Y").split("-")[2]
     month = todays_date.strftime("%d-%b-%Y").split("-")[1]
@@ -459,20 +524,69 @@ def iexport_pdf(request):
                     "Apr":4, "May":5, "Jun":6, "Jul":7, 
                     "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
     month = year_list[month]
+    allincome = 0
+    allexpense = 0
+   
     
     date_start_month = datetime.date(int(year), month, 1)
-    incomes = UserIncome.objects.filter(owner=request.user, 
-                                      date__gte=date_start_month, date__lte=todays_date)
-    expenses = Expense.objects.filter(owner=request.user,
-                                      date__gte=date_start_month, date__lte=todays_date)
+    incomes = UserIncome.objects.filter(owner=request.user,
+                                    date__gte=date_start_month, date__lte=todays_date)
+    income = UserIncome.objects.filter(owner=request.user)
+    for item in income:
+        allincome += item.amount
 
+    expense = Expense.objects.filter(owner=request.user)
+    for item in expense:
+        allexpense += item.amount
+
+    allincome = allincome - allexpense
+
+    if request.method == 'POST':
+        data = request.body
+        array1 = data.split(b'&')
+        startAr = array1[0].decode("utf-8")
+        endAr = array1[1].decode("utf-8")
+        startAr = startAr.split('=')
+        endAr = endAr.split('=')
+
+        start = startAr[1]
+        end = endAr[1]
+        yearStart = start.split('-')[0]
+        monthStart = start.split('-')[1]
+        dayStart = start.split('-')[2]
+
+        yearEnd = end.split('-')[0]
+        monthEnd = end.split('-')[1]
+        dayEnd = end.split('-')[2]
+
+
+        start = datetime.date(int(yearStart), int(monthStart), int(dayStart))
+        end = datetime.date(int(yearEnd), int(monthEnd), int(dayEnd))
+     
+          
+        if end and start:
+            incomes = UserIncome.objects.filter(owner=request.user,
+                                            date__gte=start, date__lte=end)
+        
+
+    response = HttpResponse(content_type='text/pdf')
+    response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
+        str(datetime.datetime.now()) + '.pdf'
+
+    response['Content-Transfer-Encoding'] = 'binary'
     sum = incomes.aggregate(Sum('amount'))
-    buget1 = sum['amount__sum']
-    sum = expenses.aggregate(Sum('amount'))
-    budget = buget1 - sum['amount__sum']
-    
 
-    html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': "{:.1f}".format(budget)})
+    try:    
+        currency = UserPreference.objects.get(user=request.user).currency
+    except:
+        messages.success(request, 'Veuillez configurer votre monnaie')
+        return redirect('preferences')
+
+    allincome = "{:.2f}".format(sum['amount__sum'])
+    allincome = str(allincome)+currency
+
+
+    html_string = render_to_string('income/ipdf-output.html', {'incomes': incomes, 'total': allincome })
     html = HTML(string=html_string)
     result =  html.write_pdf()
 
@@ -486,20 +600,32 @@ def iexport_pdf(request):
     return response
 
 
-    
-
+@csrf_exempt
 def iexport_excel(request):
     response = HttpResponse(content_type='text/ms-excel')
-    response['Content-Disposition'] = 'attachement; filename=BadolIncome' + \
+    response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
          str(datetime.datetime.now()) + '.xls'
 
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Depenses')
     row_num = 0
+    allincome = 0
+    allexpense = 0
+    revenu = 0
     font_style = xlwt.XFStyle()
     font_style.font.bold=True
 
-    columns = ['Montant', 'Source', 'Categorie', 'Mode de versement','Description', 'Date']
+    columns = ['Montant', 'Source',  'Categorie' , 'Mode de versement','Description', 'Date']
+
+    income = UserIncome.objects.filter(owner=request.user)
+    for item in income:
+        allincome += item.amount
+
+    expense = Expense.objects.filter(owner=request.user)
+    for item in expense:
+        allexpense += item.amount
+
+    allincome = allincome - allexpense
 
     for column in range(len(columns)):
         ws.write(row_num, column, columns[column], font_style)
@@ -508,16 +634,59 @@ def iexport_excel(request):
 
     rows = UserIncome.objects.filter(owner=request.user).values_list('amount','source', 'categories', 'versements', 'description', 'date')
 
+    if request.method == 'POST':
+        data = request.body
+        array1 = data.split(b'&')
+        startAr = array1[0].decode("utf-8")
+        
+        endAr = array1[1].decode("utf-8")
+        startAr = startAr.split('=')
+        endAr = endAr.split('=')
+
+        start = startAr[1]
+        end = endAr[1]
+        yearStart = start.split('-')[0]
+        monthStart = start.split('-')[1]
+        dayStart = start.split('-')[2]
+
+        yearEnd = end.split('-')[0]
+        monthEnd = end.split('-')[1]
+        dayEnd = end.split('-')[2]
+
+
+        start = datetime.date(int(yearStart), int(monthStart), int(dayStart))
+        end = datetime.date(int(yearEnd), int(monthEnd), int(dayEnd))
+
+            
+        if end and start:
+            rows = UserIncome.objects.filter(owner=request.user, date__gte=start, date__lte=end).values_list('amount','source', 'categories', 'versements', 'description', 'date')
+
     for row in rows:
         row_num += 1
-
+        revenu += row[0]
         for column  in range(len(row)):
             ws.write(row_num, column, str(row[column]), font_style)
+    revenu =  "{:.2f}".format(revenu)
+
+
+    try:    
+        currency = UserPreference.objects.get(user=request.user).currency
+    except:
+        messages.success(request, 'Veuillez configurer votre monnaie')
+        return redirect('preferences')
+
+    revenu = str(revenu)+currency
+    ws.write(row_num+3, 0, "REVENU TOTAL: ", font_style)
+    ws.write(row_num+3, 1, revenu, font_style) 
+
+    allincome =  "{:.2f}".format(allincome)
+    allincome = str(allincome)+currency
+    ws.write(row_num+4, 0, "SOLDE COURANT: ", font_style)
+    ws.write(row_num+4, 1, allincome, font_style) 
 
     wb.save(response)
 
     return response
-
 
 
 

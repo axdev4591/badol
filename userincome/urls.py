@@ -17,7 +17,7 @@ urlpatterns = [
            path('iexport_csv', views.iexport_csv,
          name="iexport-csv"),
      path('iexport_excel', views.iexport_excel,
-         name="iexport-excel"),
+         name="iexport_excel"),
      path('iexport_pdf', views.iexport_pdf,
-         name="iexport-pdf"),
+         name="iexport_pdf"),
 ]

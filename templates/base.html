@@ -6,53 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="This is a web app for managening expenses">
     <meta name="author" content="Axel MOUELE">
-    <title>{% block title %} Badol Expenses {% endblock %} </title>
+    <title>{% block title %} Badol App {% endblock %} </title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" >
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="{% static  'css/dashboardCSS/datepicker3.css' %}" rel="stylesheet">
+    <link rel="icon" width="80" height="80" href="{% static 'img/logo3.png' %}">
     
     <!--Custom Font-->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
       <!-- Favicons -->
    
     <meta name="theme-color" content="#563d7c">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-
-    <script type="text/javascript"> 
-      function display_c(){
-      var refresh=1000; // Refresh rate in milli seconds
-      mytime=setTimeout('display_ct()',refresh)
-      }
-      
-      function display_ct() {
-      var x = new Date()
-      document.getElementById('time').innerHTML = x;
-      display_c();
-       }
-      </script>
-
-
- 
+  
     <!-- Custom styles for this template -->
     <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
 
   </head>
   <body onload=display_ct()>
-    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" style="border-top: 4px solid #1ce; height: 80px;">
-        <a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" href="{% url 'home' %}">
-          <img src="{% static 'img/logo3.png' %}" width="50" height="50"/> 
-          <span style="font-size: larger;" style="color: #1ce;">Badol</span> 
+    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" style="border-top: 4px solid #11ccee; height: 80px;">
+      <div class="column">
+        <a style="margin-left: 7px;" href="{% url 'home' %}">
+          <img  style="padding-bottom: 0.1em; margin-bottom: 0.4em;" src="{% static 'img/logo3.png' %}" width="60" height="60"/> 
         </a>
+     
+          <span style="font-size: 40px; color: white; ">Badol</span> 
+       
+      </div>  
+      
         <ul 
         class="navbar-nav px-3"
         style="display: flex; flex-direction: row; align-items: center;"
       >
       <li class="nav-item text-nowrap" style="margin-right: 1.5em;" >
-        <span id="time" style="color: #1ce;">
+        <span id="time" style="color:white;">
            </span>
       </li>
       
@@ -80,13 +70,14 @@
 <div class="container-fluid">
   <div class="row">
    {% include 'partials/_sidebar.html' %}
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" style="margin-top: 46px;">
+    <main role="main" class="col-md-9 ml-sm-auto" style="margin-right: 108px; margin-top: 46px;">
     {% block content %} {% endblock %}
     </main>
   </div>
 </div>
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-      <script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnEo760AUcUmFx3ibVJJAzGytlQcNXd" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.5/assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
+     
       <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
       <script src="{% static 'js/main.js' %}"></script>
       <script src="{% static 'js/dashboardJS/jquery-1.11.1.min.js' %}"></script>
@@ -95,6 +86,36 @@
       <script src="{% static 'js/dashboardJS/easypiechart-data.js' %}"></script>
       <script src="{% static 'js/dashboardJS/bootstrap-datepicker.js' %}"></script>
       <script src="{% static 'js/dashboardJS/custom.js' %}"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+      <script type="text/javascript"> 
+        function display_c(){
+        var refresh=1000; // Refresh rate in milli seconds
+        mytime=setTimeout('display_ct()',refresh)
+        }
+        
+        function display_ct() {
+  
+        jours = {1: "Lundi", 2: "Mardi", 3: "Mercredi", 4: "Jeudi", 5: "Vendredi", 6: "Samedi", 7: "Dimanche"}
+  
+  
+        var date = new Date()
+        var dat = date.getDate();
+        var day =  date.getDay();
+        var day = jours[day]
+        var month =  date.getMonth()
+        var year = date.getFullYear();
+        var hour =  date.getHours()
+        var minute = date.getMinutes()
+        var second =  date.getSeconds()
+  
+        CurrentDate = day + " "+dat+" "+month+" "+year+"  "+hour+":"+minute+":"+second
+        console.log(CurrentDate)
+        document.getElementById('time').innerHTML = CurrentDate;
+        display_c();
+         }
+      </script>
         
 </body>
 </html>

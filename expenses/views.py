@@ -9,7 +9,7 @@ from django.http import JsonResponse, HttpResponse
 from userpreferences.models import UserPreference
 import datetime
 from userincome.models import UserIncome
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import csv
 import xlwt
 from django.template.loader import render_to_string
@@ -137,43 +137,17 @@ def home(request):
     income_year = income_year
 
     #calcul de l'état financier
-    critique = False
-    chaotique = False
-    normal = True
-    certain = False
+    etat = "certain"
     list_etat_financier = {}
 
     if capital >=  500:
-        certain = True
-        critique = False
-        chaotique = False
-        normal = False
-        certain = False
-        #list_etat_financier = {"certain": "certain"}
+        etat =  "Certain"
     elif capital <= 500 and capital >= 0:
-        certain = False
-        critique = False
-        chaotique = False
-        normal = True
-        certain = False
-        #list_etat_financier = {"normal": "normal"}
+        etat =  "Normal"
+    elif capital < -100:
+        etat =  "Chaotique"
     else:
-        certain = False
-        critique = True
-        chaotique = False
-        normal = False
-        certain = False
-        #list_etat_financier = {"critique": "critique"}
-
-    if capital < -100:
-        certain = False
-        critique = True
-        chaotique = False
-        normal = False
-        certain = False
-        #list_etat_financier = {"chaotique": "chaotique"}
-
-    list_etat_financier = {"certain": certain, "normal": normal, "critique": critique,  "chaotique": chaotique}
+        etat =  "Critique"
 
    
     context = {
@@ -184,7 +158,7 @@ def home(request):
         'expenses_year': "{:.1f}".format(amount_year),
         'budgetannuelle': "{:.1f}".format(income_year),
         'compte_courant': "{:.1f}".format(capital),
-        'list_etat_financier' : list_etat_financier
+        'etat' : etat
     }
 
     return render(request, 'expenses/dashboard_smDesktop.html', context)
@@ -205,10 +179,46 @@ def search_expenses(request):
 def index(request):
     categories = Category.objects.all()
     payment =  Payment.objects.all()
-    expenses = Expense.objects.filter(owner=request.user).order_by('-id')
+    todays_date = datetime.date.today()
+    year = todays_date.strftime("%d-%b-%Y").split("-")[2]
+    month = todays_date.strftime("%d-%b-%Y").split("-")[1]
+    day = todays_date.strftime("%d-%b-%Y").split("-")[0]
+    year_list = {"Jan":1, "Feb":2, "Mar":3, 
+                    "Apr":4, "May":5, "Jun":6, "Jul":7, 
+                    "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
+    month = year_list[month] 
+    date_this_month = datetime.date(int(year), int(month), int(day))
+    date_start_year = datetime.date(int(year), 1, 1)
+    date_last_month = ""
+    date_last_month2 = ""
+    date_last_month3 = ""
+  
+    if month ==  1:
+        date_last_month = datetime.date(int(year), 12, int(day))
+        date_last_month2 = datetime.date(int(year), 11, int(day))
+        date_last_month3 = datetime.date(int(year), 10, int(day))
+    elif month == 2 :
+        date_last_month = datetime.date(int(year), 1, int(day))
+        date_last_month2 = datetime.date(int(year), 12, int(day))
+        date_last_month3 = datetime.date(int(year), 11, int(day))
+    elif month == 3 :
+        date_last_month = datetime.date(int(year), 2, int(day))
+        date_last_month2 = datetime.date(int(year), 1, int(day))
+        date_last_month3 = datetime.date(int(year), 12, int(day))
+    elif month == 4 :
+        date_last_month = datetime.date(int(year), 3, int(day))
+        date_last_month2 = datetime.date(int(year), 2, int(day))
+        date_last_month3 = datetime.date(int(year), 1, int(day))
+    else:
+        date_last_month = datetime.date(int(year), int(month)-1, int(day))
+        date_last_month2 = datetime.date(int(year), int(month)-2, int(day))
+        date_last_month3 = datetime.date(int(year), int(month)-3, int(day))
+
+    expenses = Expense.objects.filter(owner=request.user, date__gte=date_last_month3, date__lte=todays_date).order_by('-id')
     paginator = Paginator(expenses, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
+ 
 
     try:    
         currency = UserPreference.objects.get(user=request.user).currency
@@ -342,17 +352,19 @@ def expense_category_summary(request):
    
     date_start_month = datetime.date(int(year), month, 1)
     expenses = Expense.objects.filter(owner=request.user,
-                                      date__gte=date_start_month, date__lte=todays_date)    
+                                      date__gte=date_start_month, date__lte=todays_date)
+    """    
     list_date_amount_tmp = {"Jan-"+str(year):"0", "Feb-"+str(year):"0", "Mar-"+str(year):"0", 
                     "Apr-"+str(year):"0", "May-"+str(year):"0", "Jun-"+str(year):"0", "Jul-"+str(year):"0", 
                     "Aug-"+str(year):"0", "Sep-"+str(year):"0", "Oct-"+str(year):"0", "Nov-"+str(year):"0", "Dec-"+str(year):"0"}
-    
+    """
     if request.method == 'POST':        
-        start = request.POST.get('startdate')
-        end = request.POST.get('enddate')
+        start = request.POST['startdate']
+        end = request.POST['enddate']
+        finalrep = {}
 
 
-        if start & end:
+        if start and end:
             expenses = Expense.objects.filter(owner=request.user,
                                       date__gte=start, date__lte=end)     
             
@@ -372,9 +384,13 @@ def expense_category_summary(request):
 
             for x in expenses:
                 for y in category_list:
-                    list_date_amount[y] = get_expense_category_amount(y)
+                    finalrep[y] = float("{:.2f}".format(get_expense_category_amount(y)))
+            
+        #https://badol.herokuapp.com/stats
+        if finalrep == {} :
+            finalrep = {"Solde": 0}
 
-        return JsonResponse({'expense_data': list_date_amount}, safe=False)
+        return JsonResponse({'expense_data': finalrep}, safe=False)
 
 
     if request.method == 'GET':
@@ -398,7 +414,7 @@ def expense_category_summary(request):
         for x in expenses:
             for y in category_list:
                 finalrep[y] = float("{:.2f}".format(get_expense_category_amount(y)))
-        
+       
         return JsonResponse({'expense_data': finalrep}, safe=False)
 
 
@@ -442,13 +458,10 @@ def stats_view(request):
     return render(request, 'expenses/stats_smDesktop.html', context)
 
 
-
-
+@csrf_exempt
 def export_pdf(request):
 
-    if request.method == 'POST':
-        hello = ""
-        
+   
     todays_date = datetime.date.today()
     year = todays_date.strftime("%d-%b-%Y").split("-")[2]
     month = todays_date.strftime("%d-%b-%Y").split("-")[1]
@@ -456,19 +469,58 @@ def export_pdf(request):
                     "Apr":4, "May":5, "Jun":6, "Jul":7, 
                     "Aug":8, "Sep":9, "Oct":10, "Nov":11, "Dec":12}
     month = year_list[month]
+    allexpense = 0
     
     date_start_month = datetime.date(int(year), month, 1)
     expenses = Expense.objects.filter(owner=request.user,
-                                      date__gte=date_start_month, date__lte=todays_date)
-  
+                                    date__gte=date_start_month, date__lte=todays_date)
+
+    if request.method == 'POST':
+        data = request.body
+        array1 = data.split(b'&')
+        startAr = array1[0].decode("utf-8")
+        endAr = array1[1].decode("utf-8")
+        startAr = startAr.split('=')
+        endAr = endAr.split('=')
+
+        start = startAr[1]
+        end = endAr[1]
+        yearStart = start.split('-')[0]
+        monthStart = start.split('-')[1]
+        dayStart = start.split('-')[2]
+
+        yearEnd = end.split('-')[0]
+        monthEnd = end.split('-')[1]
+        dayEnd = end.split('-')[2]
+
+
+        start = datetime.date(int(yearStart), int(monthStart), int(dayStart))
+        end = datetime.date(int(yearEnd), int(monthEnd), int(dayEnd))
+     
+          
+        if end and start:
+            expenses = Expense.objects.filter(owner=request.user,
+                                            date__gte=start, date__lte=end)
+        
+
     response = HttpResponse(content_type='text/pdf')
     response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
-         str(datetime.datetime.now()) + '.pdf'
+        str(datetime.datetime.now()) + '.pdf'
 
     response['Content-Transfer-Encoding'] = 'binary'
     sum = expenses.aggregate(Sum('amount'))
 
-    html_string = render_to_string('expenses/pdf-output.html', {'expenses': expenses, 'total': "{:.1f}".format(sum['amount__sum'])})
+    try:    
+        currency = UserPreference.objects.get(user=request.user).currency
+    except:
+        messages.success(request, 'Veuillez configurer votre monnaie')
+        return redirect('preferences')
+
+    allexpense = "{:.2f}".format(sum['amount__sum'])
+    allexpense = str(allexpense)+currency
+
+
+    html_string = render_to_string('expenses/pdf-output.html', {'expenses': expenses, 'total':allexpense })
     html = HTML(string=html_string)
     result =  html.write_pdf()
 
@@ -482,8 +534,7 @@ def export_pdf(request):
     return response
 
 
-    
-
+@csrf_exempt
 def export_excel(request):
     response = HttpResponse(content_type='text/ms-excel')
     response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
@@ -492,6 +543,7 @@ def export_excel(request):
     wb = xlwt.Workbook(encoding='utf-8')
     ws = wb.add_sheet('Depenses')
     row_num = 0
+    allexpense = 0
     font_style = xlwt.XFStyle()
     font_style.font.bold=True
 
@@ -503,12 +555,50 @@ def export_excel(request):
     font_style = xlwt.XFStyle()
 
     rows = Expense.objects.filter(owner=request.user).values_list('amount','payment', 'category', 'description', 'date')
+    if request.method == 'POST':
+        data = request.body
+        array1 = data.split(b'&')
+        startAr = array1[0].decode("utf-8")
+        
+        endAr = array1[1].decode("utf-8")
+        startAr = startAr.split('=')
+        endAr = endAr.split('=')
+
+        start = startAr[1]
+        end = endAr[1]
+        yearStart = start.split('-')[0]
+        monthStart = start.split('-')[1]
+        dayStart = start.split('-')[2]
+
+        yearEnd = end.split('-')[0]
+        monthEnd = end.split('-')[1]
+        dayEnd = end.split('-')[2]
+
+
+        start = datetime.date(int(yearStart), int(monthStart), int(dayStart))
+        end = datetime.date(int(yearEnd), int(monthEnd), int(dayEnd))
+
+            
+        if end and start:
+            rows = Expense.objects.filter(owner=request.user, date__gte=start, date__lte=end).values_list('amount','payment', 'category', 'description', 'date')
 
     for row in rows:
         row_num += 1
-
+        allexpense += row[0]
         for column  in range(len(row)):
             ws.write(row_num, column, str(row[column]), font_style)
+    allexpense =  "{:.2f}".format(allexpense)
+
+
+    try:    
+        currency = UserPreference.objects.get(user=request.user).currency
+    except:
+        messages.success(request, 'Veuillez configurer votre monnaie')
+        return redirect('preferences')
+
+    allexpense = str(allexpense)+currency
+    ws.write(row_num+3, 0, "DEPENSE TOTALE: ", font_style)
+    ws.write(row_num+3, 1, allexpense, font_style)
 
     wb.save(response)
 

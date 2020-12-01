@@ -178,7 +178,6 @@ var resetCanvas = function(){
         
           };
          
-
   const renderChart4 = (data, labels) =>{
 
     var myPieChart = new Chart(ctxP4, {
@@ -258,6 +257,7 @@ var resetCanvas = function(){
  *                       *
  *************************/
 
+
   function getexpense(){
 
       fetch('/expense_category_summary')
@@ -265,23 +265,30 @@ var resetCanvas = function(){
       .then((results)=>{
           console.log("data for get", results);
           const category_data = results.expense_data;
+          if(Object.keys(category_data).length != 0 ){
             mlabels = Object.keys(category_data);
             mdata = Object.values(category_data);
+
+            console.log("data for get", category_data);
           if(checkMethod.textContent == 'false'){
           resetCanvas();
-          ctxP = document.getElementById("myChart").getContext('2d');
-          ctxP2 = document.getElementById("myChart2").getContext('2d');
-          ctxP4 = document.getElementById("myChart4").getContext('2d');
+
+            ctxP = document.getElementById("myChart").getContext('2d');
+            ctxP2 = document.getElementById("myChart2").getContext('2d');
+            ctxP4 = document.getElementById("myChart4").getContext('2d');
 
           renderChart(mdata, mlabels); 
           renderChart2(mdata, mlabels);
           renderChart4(mdata, mlabels); 
+    
 
           }
+        }
 
       });
 
 }
+
 document.onload =  getexpense();
 
 
@@ -297,14 +304,18 @@ document.onload =  getexpense();
 
 
   // mettre ici le code à exécuter
-  var myform = document.getElementById("myform");
+  /*
+  var myform = document.getElementById("formule");
 
-myform.addEventListener('submit', function(e) {
+  console.log(myform)
+
+  myform.addEventListener('submit', function(e) {
      checkMethod.innerHTML = "True"
 
       e.preventDefault();
 
       const formData = new FormData(this);
+
 
       fetch('/expense_category_summary', {
         method: 'post',
@@ -312,10 +323,16 @@ myform.addEventListener('submit', function(e) {
       }).
       then((res)=>res.json()).
       then((results)=>{
-        console.log("data for post", results);
+ 
+
         const category_data = results.expense_data;
+
+        if(Object.keys(category_data).length != 0){
+
         mlabels = Object.keys(category_data);
         mdata = Object.values(category_data);
+        console.log("data for post", results);
+        console.log("data post", mdata);
         if(checkMethod.textContent == 'True'){
 
           resetCanvas();
@@ -326,45 +343,16 @@ myform.addEventListener('submit', function(e) {
           renderChart(mdata, mlabels); 
           renderChart2(mdata, mlabels);
           renderChart4(mdata, mlabels);  
-          }
+          
+        }
+      }
       }).
       catch(function(error){
         console.log(error);
       })
  
 
-  });
+  });*/
 
-
-/************side bar********** */
-
-  // Get the container element
-//var btnContainer = document.getElementById("nav-item");
- 
-var header = document.getElementById("myside");
-var btns = document.getElementsByClassName("nav-link");
-//console.log(btns[0]);
-for (var i = 0; i < btns.length; i++) {
-  console.log("before clickefbn");
-
-  btns[i].addEventListener("click", function() {
-  var current = document.getElementsByClassName("active");
-  console.log("is clickefbn");
-  current[0].className = current[0].className.replace(" active", "");
-  this.className += " active";
-  });
-}
-
-
-function switchChannel(el){
-  // find all the elements in your channel list and loop over them
-  Array.prototype.slice.call(document.querySelectorAll('ul[data-tag="channelList"] li')).forEach(function(element){
-    // remove the selected class
-    element.classList.remove('active');
-  });
-  // add the selected class to the element that was clicked
-  console.log('add class')
-  el.classList.add('active');
-}
 });
     

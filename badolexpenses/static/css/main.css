@@ -74,13 +74,25 @@ border-color: #e9ecf2; }
   #easypiechart-red .percent {
     color: #ef4040; }
 
+
+      
+  #easypiechart-darkCeen .percent {
+    color: #9370DB; }
+  
+  #easypiechart-darkBleu .percent {
+    color: #FF00FF; }
+  
+  #easypiechart-darkSteal .percent {
+    color: #00FF00; }
+  
+  #easypiechart-mediumViolet .percent {
+    color: #C71585; }
+
+
+    
     h1.page-header {
       margin-top: 20px;
       border-bottom: 0; }
-
-
-
-
 
 
 
@@ -112,10 +124,10 @@ border-color: #e9ecf2; }
  }
 
  .bg-dark {
-  background:  rgb(0, 62, 69);
+  background:  #BDB76B;
 }
 #header {
-  background: rgb(0, 62, 69);
+  background:#BDB76B;
   color: #ffffff;
 }
 
@@ -289,6 +301,7 @@ hr {
   background-clip: border-box;
   border: 1px solid rgba(0,0,0,0.125);
   border-radius: .25rem;
+  background-color: rgba(0,0,0,0.125);
 }
 
 .card {
@@ -439,15 +452,18 @@ margin-bottom: 1rem;
   -webkit-transition-timing-function: linear, linear;
   transition-timing-function: linear, linear;
   -webkit-overflow-scrolling: touch;
+  width: 87px; 
+  text-align: center;
 }
-.sidebar-background {
-  background: url('/static/img/sidebar-3.jpg') repeat red;
 
-}
+
 
 /* Style the active class (and buttons on mouse-over) */
 .active, .nav-link:hover {
-  background-color: rgb(0, 62, 69);;
+  background-color:#BDB76B;
   color: white;
+}
+.active, .nav-link{
+  color: black;
 }
 

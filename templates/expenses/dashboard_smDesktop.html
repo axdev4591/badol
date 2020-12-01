@@ -7,10 +7,9 @@
         <h1 class="page-header" style="margin-left: 124px;">Vos finances en un clin d'oeil</h1>
     </div>
 </div><!--/.row-->
-<div style="margin-top: 27px;" class="container">
+<div  style="margin-top: 27px;" class="container">
       		
 {% include 'partials/_messages.html' %}
-
 
         <!-- row -->
 		<div class="row">
@@ -20,7 +19,7 @@
 					<div class="panel-body easypiechart-panel">
 <!-- //Today Expense -->
 
-						<h4 style="margin-top: 6px;">Dépenses journalier</h4>
+						<h4 style="margin-top: 6px;">Dépenses journalieres</h4>
 						<div class="easypiechart" id="easypiechart-blue" data-percent="{{expenses_today}}" >
                             <span class="percent">{{expenses_today}}€</span>
                         </div>
@@ -49,7 +48,7 @@
 <!-- //Weekly Expense -->
 
 					<div class="panel-body easypiechart-panel">
-						<h4 style="margin-top: 6px;">Dépenses hebdomadaires</h4>
+						<h4 style="margin-top: 6px;">Dépenses hebdo</h4>
 						<div class="easypiechart" id="easypiechart-teal" data-percent="{{expenses_week}}">
                             <span class="percent">{{expenses_week}}€</span>
                         </div>
@@ -65,7 +64,7 @@
 
 					<div class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Dépenses mensuelles</h4>
-						<div class="easypiechart" id="easypiechart-red" data-percent="{{expenses_month}}" >
+						<div class="easypiechart" id="easypiechart-darkCeen" data-percent="{{expenses_month}}" >
                             <span class="percent">{{expenses_month}}€</span>
                         </div>
 					</div>
@@ -86,7 +85,7 @@
 
 					<div class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Dépenses annuelles</h4>
-						<div class="easypiechart" style="color:red;" data-percent="{{expenses_year}}" >
+						<div class="easypiechart"  id="easypiechart-red" data-percent="{{expenses_year}}" >
                             <span class="percent">{{expenses_year}}€</span>
                         </div>
 
@@ -105,7 +104,7 @@
 
 					<div  class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Gain Annuel</h4>
-						<div class="easypiechart" style="color:  #1ce;" data-percent="{{income}}" >
+						<div class="easypiechart"  id="easypiechart-darkBleu" style="color:  #1ce;" data-percent="{{budgetannuelle}}" >
                             <span class="percent">{{budgetannuelle}}€</span>
                         </div>
 
@@ -122,7 +121,7 @@
 
 					<div  class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Solde de compte</h4>
-						<div class="easypiechart" style="color:  #1ce;" data-percent="{{income}}" >
+						<div class="easypiechart"  id="easypiechart-darkSteal" data-percent="{{compte_courant}}" >
                             <span class="percent">{{compte_courant}}€</span>
                         </div>
 
@@ -139,19 +138,10 @@
 
 					<div  class="panel-body easypiechart-panel">
 						<h4 style="margin-top: 6px;">Etat financier</h4>
-						<div class="easypiechart" id="easypiechart-red"  data-percent="{{income}}" >
-						{% for item in list_etat_financier %}
-							{% if item.certain  %}
-								<span style="color:darkorchid; font-size: larger;" class="percent">Certain</span>
-							{% elif item.normal  %}
-								<span style="color:darkgreen; font-size: larger;" class="percent">Normal</span>
-							{% elif item.critique %}
-								<span style="color:dimgrey; font-size: larger;" class="percent">Critique</span>
-							{% else %}
-								<span  style="color:darkorchid; font-size: larger; font-weight: bolder;" class="percent">Normal</span>
-							{% endif %}
-						{% endfor %}
-                            
+						<div class="easypiechart" id="easypiechart-mediumViolet"  data-percent="{{compte_courant}}" >
+						
+						<span  style="font-size: larger; font-weight: bolder;" class="percent">{{etat}}</span>
+  
                         </div>
 
 					</div>
@@ -163,8 +153,11 @@
 
         </div>
         <div style="margin-top: 14px;" class="col-sm-12">
-            <p class="back-link">Badol, logiciel de gestion budgétaire <a href="https://www.facebook.com/Axel4591">Suivez-nous</a></p>
-        </div>
+			<p class="back-link">Badol, logiciel de gestion budgétaire <a href="https://www.facebook.com/Axel4591">Suivez-nous</a></p>
+			<span style="color: black !important; margin-bottom: 4px;">Développé par Axel MOUELE</span>
+		    <p>&copy; CopyRight 2020 Badol</p>
+		</div>
+		
 		
         <!--/.row-->
         <script src="{% static 'js/dashboardJS/jquery-1.11.1.min.js' %}"></script>
@@ -174,7 +167,8 @@
         <script src="{% static 'js/dashboardJS/easypiechart.js' %}"></script>
         <script src="{% static 'js/dashboardJS/easypiechart-data.js' %}"></script>
         <script src="{% static 'js/dashboardJS/bootstrap-datepicker.js' %}"></script>
-        <script src="{% static 'js/dashboardJS/custom.js' %}"></script>
+		<script src="{% static 'js/dashboardJS/custom.js' %}"></script>
+		    
  
 </div>	
     

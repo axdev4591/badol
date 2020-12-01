@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container mt-3">
-  <h5>Choisir ma monnaie</h5>
+  <h3>Choisir ma monnaie</h3>
   {% include 'partials/_messages.html' %}
   <form action="{% url 'preferences'%}" method="post">
     {% csrf_token %}
@@ -22,16 +22,48 @@
         {% endfor %}
       </select>
    
-           <div style="margin-left: 2em;" class="input-group-append"> <input class="btn btn-outline-info rounded" type="submit" value="Valider" />
-        </div>
+       <div style="margin-left: 2em;" class="input-group-append"> 
+            <input class="btn btn-outline-info rounded" type="submit" value="Valider" />
+      </div>
 
     </div>
   </form>
   <div class="input-group mt-3" > 
     <img  style="margin-left: 22em;" src="{% static 'img/currencyImage.png' %}"/>
  </div>
+
+</div>
+<hr />
+<h3>Mode de Paiement</h3>
+<div class="p-3" style="color: #007bff !important;">
+    <div class="radio">
+        <label>
+<input type="radio" name="paypal" checked="checked" class="mr-2"><a href="https://www.paypal.com/us/signin"> Paypal <i class="fab fa-paypal"></i></a>
+
+</label>
+    </div>
+    <div class="radio">
+        <label>
+          <input type="radio" name="payment_gateway" class="mr-2">
+                      <i class="fab fa-cc-visa"></i>
+            Visa Carte de Crédit
+        </label>
+    </div>
+    <div class="radio">
+        <label>
+        <input type="radio" name="payment_gateway" class="mr-2">
+            Western Union
+        </label>
+    </div>
 </div>
 
-<hr />
+<br />
+<input type="checkbox" name="terms_and_conditions" />&nbsp; J'ai et j'accepte <a href="#">termes & conditions</a>
+<br />
+<br />
+<input type="submit" class="btn btn-outline-info rounded btn-lg" value="Valider" />
+</div>
+
+
 
 {% endblock %}

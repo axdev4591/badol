@@ -11,6 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+#Settings utilisé en prod dans les ConfigVar de heroku
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'badolexpenses.settings')
 
 application = get_wsgi_application()

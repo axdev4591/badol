@@ -13,16 +13,14 @@ class UserIncome(models.Model):
     source = models.CharField(max_length=266)
     versements = models.CharField(max_length=200, default='Paypal')
     categories = models.CharField(max_length=266)
-
-
-
-    def __str__(self):
-        return self.source
+ 
 
     class Meta:
         ordering: ['-date']
+        verbose_name_plural = 'Revenus' 
 
-
+    def __str__(self):
+        return self.source
 
 class Categories(models.Model):
     name = models.CharField(max_length=255)

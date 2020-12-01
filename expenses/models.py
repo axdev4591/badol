@@ -15,27 +15,31 @@ class Expense(models.Model):
     payment = models.CharField(max_length=200, default='Cash')
 
 
-    def __str__(self):
-        return self.category
+    
 
     class Meta:
         ordering: ['-date'] #order by date in descending order
+        verbose_name_plural = 'Dépenses' 
+
+    def __str__(self):
+        return self.category
 
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name_plural = 'Categories' #define in djando admin how this model should be called in plural form
+        verbose_name_plural = 'Categories' #define in djando admin how this model should be called in plural 
 
     def __str__(self):
         return self.name
+
 
 class Payment(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name_plural = 'Modes de paiement' #define in djando admin how this model should be called in plural form
+        verbose_name_plural = 'Modes de paiement' #define in djando admin how this model should be called in plural
 
     def __str__(self):
         return self.name

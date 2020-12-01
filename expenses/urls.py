@@ -21,6 +21,6 @@ urlpatterns = [
      path('export_excel', views.export_excel,
          name="export-excel"),
      path('export_pdf', views.export_pdf,
-         name="export-pdf"),
+         name="export_pdf"),
 
 ]

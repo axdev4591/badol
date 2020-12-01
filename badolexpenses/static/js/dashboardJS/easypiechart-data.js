@@ -25,3 +25,33 @@ $(function() {
        barColor: '#30a5ff'
    });
 });
+
+
+
+    $(function() {
+        $('#easypiechart-darkCeen').easyPieChart({
+            scaleColor: false,
+            barColor: '#9370DB'
+        });
+    });
+    
+    $(function() {
+        $('#easypiechart-darkBleu').easyPieChart({
+            scaleColor: false,
+            barColor: '#FF00FF'
+        });
+    });
+    
+    $(function() {
+        $('#easypiechart-darkSteal').easyPieChart({
+            scaleColor: false,
+            barColor: '#00FF00'
+        });
+    });
+    
+    $(function() {
+       $('#easypiechart-mediumViolet').easyPieChart({
+           scaleColor: false,
+           barColor: '#C71585'
+       });
+    });

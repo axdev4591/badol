@@ -20,6 +20,8 @@ from django.urls import reverse
 from django.contrib import auth
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
+from badolexpenses.prod_settings import *
+from badolexpenses.settings import *
 
 
 
@@ -33,9 +35,6 @@ class EmailThread(threading.Thread):
 
     def run(self):
         self.email.send(fail_silently=False)
-
-
-
 
 # Create your views here.
 class UsernameValidationView(View):
@@ -53,9 +52,9 @@ class EmailValidationView(View):
         data = json.loads(request.body)
         email = data['email']
         if not validate_email(email):
-            return JsonResponse({'email_error': 'Email is invalid'}, status=400)
+            return JsonResponse({'email_error': 'Email invalide'}, status=400)
         if User.objects.filter(email=email).exists():
-            return JsonResponse({'email_error': 'sorry email in use, choose another one '}, status=409)
+            return JsonResponse({'email_error': 'désolé ce email est déjà utilisée, choisissez un autre '}, status=409)
         return JsonResponse({'email_valid': True})
 
 class RegistrationView(View):
@@ -98,19 +97,21 @@ class RegistrationView(View):
                 link = reverse('activate', kwargs={
                                'uidb64': email_body['uid'], 'token': email_body['token']})
 
-                email_subject = 'Activate your account'
+                email_subject = 'Activation du compte'
 
                 activate_url = 'http://'+current_site.domain+link
 
                 email = EmailMessage(
                     email_subject,
-                    'Hi '+user.username + ', Please follow the link below to activate your account \n'+activate_url,
+                    'Salut '+user.username + '\n\n Veuillez cliquez sur le lien ci-dessous pour activer votre compte \n\n'+activate_url,
                     'noreply@badol.com',
                     [email],
                 )
                 
                 EmailThread(email).start()            
-                messages.success(request, 'Votre compte Badol a bien été créé, connectez-vous')
+                messages.success(request, 'Votre compte Badol a bien été créé, pour activer votre compte suivez le lien reçu par mail')
+           
+
                 return render(request, 'authentication/login.html', context)
   
         return render(request, 'authentication/register.html')
@@ -131,6 +132,16 @@ class VerificationView(View):
             user.save()
 
             messages.success(request, 'Account activated successfully')
+
+            #Notify admin when an account has been validated
+            app_url = "https://"+ALLOWED_HOSTS[2] 
+            email = EmailMessage(
+                'Accès au dashboard Badol',
+                'Salut Admin \n\n'+user.username + ' vient d activer son compte, veuillez lui donner accès au dashboard badol \n\n'+app_url,
+                'noreply@badol.com',
+                ['axelmouele4591@gmail.com', 'paka.jeny@gmail.com'],
+            )
+            EmailThread(email).start() 
             return redirect('login')
 
         except Exception as ex:
@@ -152,11 +163,11 @@ class LoginView(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.success(request, 'Welcome, ' +
-                                     user.username+' you are now logged in')
+                    messages.success(request, 'Bienvenue sur Badol, ' +
+                                     user.username+' Vous êtes maintenant connecté')
                     return redirect('home')
                 messages.error(
-                    request, 'Account is not active,please check your email')
+                    request, 'Votre compte n est pas encore activé, svp vérifiez votre email')
                 return render(request, 'authentication/login.html')
             messages.error(
                 request, 'Invalid credentials,try again')
@@ -294,9 +305,11 @@ class ContactView(View):
                 messages.error(request, 'Email {0} associé à aucun compte'.format(email))
                 return render(request, 'authentication/contact.html', context)
 
+        #Notify admin when an account has been validated
+        app_url = "https://"+ALLOWED_HOSTS[2] 
         email1 = EmailMessage(
                     sujet,
-                    message  + "\n\n ["+email+", "+nom+"]",
+                    message  + "\n\n "+email+"\n"+nom+"\n"+app_url,
                     email,
                     ['badolappinfo@gmail.com'],
                 )
@@ -307,7 +320,7 @@ class ContactView(View):
 
         email2 = EmailMessage(
                     email_subject,
-                    'Bonjour\n\nNous avons bien reçu votre requête sur badol, nous allons vous répondre dans les plus brefs delais.\n\n\n\n\n\nhttps://badol.herokuapp.com/\n0758000973',
+                    'Bonjour\n\nNous avons bien reçu votre requête sur badol, nous allons vous répondre dans les plus brefs delais.\n\n'+app_url,
                     'noreply@badol.com',
                     [email],
                 )

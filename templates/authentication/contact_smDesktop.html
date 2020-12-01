@@ -4,7 +4,7 @@
 {% block content %} 
 <div class="container"> <!--mt for margin top-->
 <!-- Section: Contact v.1 -->
-<section class="my-5">
+<section class="my-5" >
 
     <!-- Section heading -->
     <h2 class="h1-responsive font-weight-bold text-center">Contact</h2>
@@ -31,7 +31,8 @@
             <p class="dark-grey-text" style="font-family: sans-serif; font-size: 1rem; color: #212529;">Nous vous répondrons très rapidement.</p>
            
             <!-- Body -->
-            <form action="{% url 'contact' %}" method="post" id="contact-form"><input type="hidden" name="csrfmiddlewaretoken" value="NnCmOqVQCwM9expoYWjgoVSmvoFgDanJyddbaAoxy5qewwrHaBr7CjLezpyKONFD">
+            <form style="background-color: rgb(0, 62, 69);" action="{% url 'contact' %}" method="post" id="contact-form">
+              <input type="hidden" name="csrfmiddlewaretoken" value="NnCmOqVQCwM9expoYWjgoVSmvoFgDanJyddbaAoxy5qewwrHaBr7CjLezpyKONFD">
               {% csrf_token %}
               {% include 'partials/_messages.html' %}
               <div class="md-form">           

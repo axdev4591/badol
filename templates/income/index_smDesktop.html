@@ -30,31 +30,25 @@
     {% if income.count %}
 
     <div class="row">
-      <div class="col-md-1">
-        <!--add-expense is the view name given in the urls.py-->
-        <a href="{% url 'iexport-pdf' %}" class="btn btn-outline-info btn-sm" style="border-radius: 12px;">Export en PDF</a>
-      </div>
-      <div class="col-md-1">
-        <!--add-expense is the view name given in the urls.py-->
-        <a href="{% url 'iexport-excel' %}" class="btn btn-outline-info btn-sm" style="border-radius: 12px;">Export en Excel</a>
-      </div>
-    
-
-     <form class="form-row align-items-center bilan2"  style="background-color: #e9ecef; margin-right: 169px;" id="formexport">
-    
+      <form id="formexport" enctype="multipart/form-data" class="form-row align-items-center bilan2"  style="background-color: #e9ecef;margin-left: 1px;" >
+       {% csrf_token %}
         <div class="col-auto my-1">
           <label class="mr-sm-2"  style="color: royalblue;">Début</label>
-          <input type="date"  class="form-control form-control-sm" name="startdate" style="font-size: 1.3em;" value="{{ date6ago | date:'d-m-Y'}}" >
+          <input type="date"  class="form-control form-control-sm" name="startdate" style="font-size: 1.3em;" value="" >
         </div>
-        <div class="col-auto my-1">
+        <div class="col-auto my-1" >
           <label class="mr-sm-2"  style="color: royalblue;">Fin</label>
-          <input type="date"  class="form-control form-control-sm" name="enddate" style="font-size: 1.3em;" value="{{ date6ago | date:'d-m-Y'}}" >
-        </div>
-     </form>
+          <input type="date"  class="form-control form-control-sm" name="enddate" style="font-size: 1.3em;" value="" >
+        </div>      
+      </form>
+       <div class="col-md-2" style="margin-top: 1px;" >
+        <input id="pdf"  type="submit" value="Rapport PDF. " class="btn btn-outline-info rounded" style="border-radius: 12px;"/>
+        <input id="excel" type="submit" value="Rapport Excel" class="btn btn-outline-info rounded"  style="border-radius: 12px; margin-top: 3px;"/>
+      </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4" style="margin-left: 3em ;">
 
-        <div class="form-group">
+        <div class="form-group" style="margin-top: 2.4em;">
           <input type="text" class="form-control rounded" id="searchField" placeholder="Search">
         </div>
       </div>
@@ -169,6 +163,7 @@
 
 <script src="{% static 'js/dialog.js' %}"></script>
 <script src="{% static 'js/searchIncome.js' %}"></script>
+<script type="module" src="{% static 'js/income_excel_pdf.js' %}"></script>
 
 
 

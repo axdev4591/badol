@@ -297,6 +297,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
   
   // mettre ici le code à exécuter
+  /*
   var myform = document.getElementById("imyform");
   
   myform.addEventListener('submit', function(e) {
@@ -314,6 +315,8 @@ document.addEventListener("DOMContentLoaded", function() {
         then((results)=>{
           console.log("income data for post", results);
           const category_data = results.income_data;
+
+          if(Object.keys(category_data).length != 0){
           mlabels = Object.keys(category_data);
           mdata = Object.values(category_data);
           if(checkMethod.textContent == 'True'){
@@ -327,11 +330,12 @@ document.addEventListener("DOMContentLoaded", function() {
             renderChart2(mdata, mlabels);
             renderChart4(mdata, mlabels);  
             }
+          }
         }).
         catch(function(error){
           console.log(error);
         })
    
   
-  });
+  });*/
   });

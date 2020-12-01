@@ -1,43 +1,43 @@
 {% load static %}
 
-<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse sidebar-background">
-    <div id="myside" class="sidebar-sticky pt-3 mt-4">
+<nav id="sidebarMenu" style=" width: fit-content;" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse sidebar-background">
+    <div  id="myside" style="background-color:#E6E6FA;  width: fit-content;" class="sidebar-sticky pt-3 mt-4">
       <ul class="nav flex-column" data-tag="channelList">
-        <li class="nav-item" class="active" onclick="switchChannel(this)">
+        <li class="nav-item" class="active">
           <a class="nav-link" href="{% url 'home' %}">
             <img  src="{% static 'img/noun_Home_2082115.png' %}" width="30" height="30"/>
-            <span style="color: white;">Accueil</span> 
+            <span>Accueil</span> 
           </a>
         </li>
-        <li class="nav-item" onclick="switchChannel(this)">
+        <li class="nav-item">
           <a class="nav-link" href="{% url 'expenses' %}">
             <img src="{% static 'img/noun_expense_1.png' %}" width="30" height="30"/>
-           <span style="color: white;" > Mes Dépenses</span> 
+           <span> Mes Dépenses</span> 
           </a>
         </li>
-        <li class="nav-item" onclick="switchChannel(this)">
+        <li class="nav-item">
           <a class="nav-link" href="{% url 'income' %}">
             <img src="{% static 'img/noun_Income_1.png' %}" width="30" height="30"/>
-            <span style="color: white;" >Mes revenus</span> 
+            <span>Mes revenus</span> 
           </a>
         </li>
       </ul>
 
       <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span style="color:black;">Données statistiques</span>
+        <span>Données statistiques</span>
       </h6>
       <ul class="nav flex-column mb-2">
         <li class="nav-item">
           <a class="nav-link"  href="{% url 'stats' %}">
             <img  id='exp' src="{% static 'img/graph2.png' %}" width="30" height="30"/>
-             <span style="color: white;" >Bilan des dépenses </span> 
+             <span>Bilan des dépenses </span> 
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'instats' %}">
             <img src="{% static 'img/graph1.png' %}" width="30" height="30"/>
             
-            <span style="color: white;" > Bilan des revenus</span> 
+            <span> Bilan des revenus</span> 
 
           </a>
         </li>
@@ -45,38 +45,37 @@
          
 
       <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-        <span style="color: black;">Configurations</span>
+        <span>Configurations</span>
       </h6>
       <ul class="nav flex-column mb-2">
         <li class="nav-item">
           <a class="nav-link" href="{% url 'preferences' %}">
             <img src="{% static 'img/settings.png' %}" width="30" height="30"/>
-              <span style="color: white;" > Générale</span> 
+              <span> Générale</span> 
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="https://badol.herokuapp.com/admin/" target="_blank">
             <img src="{% static 'img/logo2.png' %}" width="40" height="40"/>
-                  <span style="color: white;" >Admin</span> 
+                  <span>Admin</span> 
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'contact' %}">
-            <img src="{% static 'img/support.png' %}" width="40" height="40"/>          
-            <span style="color: white;" > Contact</span> 
+            <img src="{% static 'img/support.png' %}" width="35" height="35"/>          
+            <span> Support</span> 
           </a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'contact' %}">
-            <img src="{% static 'img/setting1.png' %}" width="40" height="40"/>          
-            <span style="color: white;" > CGU & Support</span> 
+          <a style="flex-direction: column;" class="nav-link" href="{% url 'contact' %}">
+            <img src="{% static 'img/setting1.png' %}" width="32" height="32"/>          
+            <span>Tuto</span> 
           </a>
         </li>
 
-        <li class="nav-item" style=" margin-top: 2em; margin-left: 1.3em;">
-          <span style="color:white !important; margin-bottom: 4px;">Développé par Axel MOUELE</span>
-           <p style="margin-top: 2em;">&copy; CopyRight 2020 Badol</p>
+        <li class="nav-item" style=" margin-top: 2em;">
+         
         </li>
       </ul>
     </div>
