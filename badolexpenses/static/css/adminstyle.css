@@ -1,5 +1,5 @@
 #header {
-    background: #BDB76B;
+    background: #483D8B;
     color: #ffffff;
   }
   
@@ -8,7 +8,7 @@
   }
   
   div.breadcrumbs {
-    background: #BDB76B;
+    background: #483D8B;
     color: #ffffff;
   }
   
@@ -19,7 +19,7 @@
   input[type="submit"],
   input[type="button"],
   .submit-row input {
-    background: #BDB76B;
+    background: #483D8B;
     color: #ffffff;
 
   }

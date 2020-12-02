@@ -124,10 +124,10 @@ border-color: #e9ecf2; }
  }
 
  .bg-dark {
-  background:  #BDB76B;
+  background:  #483D8B;
 }
 #header {
-  background:#BDB76B;
+  background:#483D8B;
   color: #ffffff;
 }
 
@@ -460,7 +460,7 @@ margin-bottom: 1rem;
 
 /* Style the active class (and buttons on mouse-over) */
 .active, .nav-link:hover {
-  background-color:#BDB76B;
+  background-color:#483D8B;
   color: white;
 }
 .active, .nav-link{
