@@ -17,6 +17,41 @@ from weasyprint import HTML
 import tempfile
 from django.db.models import Sum
 
+from rest_framework import viewsets
+from .serializers import ExpenseSerializer
+import requests
+from badolexpenses.settings import *
+
+
+#Create API for expenses
+class ExpenseViewSet(viewsets.ModelViewSet):
+    queryset = Expense.objects.all().order_by('-date')
+    serializer_class = ExpenseSerializer
+
+
+#Geolocalization Api
+
+
+def geoapi(request):
+
+
+    is_cached = ('geodata' in request.session)
+
+    if not is_cached:
+        ip_address = request.META.get('HTTP_X_FORWARDED_FOR', '')
+        params = {'access_key': IPSTACK_API_KEY}
+        response = requests.get('http://api.ipstack.com/%s' % ip_address, params=params)
+        request.session['geodata'] = response.json()
+    geodata = request.session['geodata']
+    
+    return render(request, 'expenses/geoapi.html', {
+        'ip': geodata.get('ip'),
+        'country': geodata.get('country_name', ''),
+        'latitude': geodata.get('latitude', ''),
+        'longitude': geodata.get('longitude', ''),
+        'api_key': GOOGLE_MAPS_API_KEY,
+        'is_cached': is_cached
+    })
 
 
 @login_required(login_url='/authentication/login')

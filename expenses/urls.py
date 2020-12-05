@@ -1,7 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework import routers
 
+#The REST Framework router will make sure our requests end up at the right resource dynamically
+#A router works with a viewset (see views.py above) to dynamically route requests
+router = routers.DefaultRouter()
+router.register(r'expenses', views.ExpenseViewSet)
 
 
 urlpatterns = [
@@ -22,5 +27,13 @@ urlpatterns = [
          name="export-excel"),
      path('export_pdf', views.export_pdf,
          name="export_pdf"),
+    
+    # Wire up our API using automatic URL routing.
+    # Additionally, we include login URLs for the browsable API.
+    path('api', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')), #l'ajout du namespace cause des erreur de hyperlink, user-detail
+    
+    path('geoapi', views.geoapi,
+         name="geoapi"),
 
 ]

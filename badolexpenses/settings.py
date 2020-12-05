@@ -15,6 +15,7 @@ from django.contrib import messages
 #import django_heroku
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from decouple import config, Csv
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,7 +27,7 @@ SECRET_KEY = '+-x&o7pk$fkqkcc4_-%r2d1q5m%j$pi+t=0%6-@#&9l(^8oiu#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'badol.herokuapp.com'] 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1'] 
 
 
 # Application definition
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'userpreferences.apps.UserpreferencesConfig',
     'userincome.apps.UserincomeConfig',
     'authenticationApp.apps.AuthenticationappConfig',
+    'rest_framework',
 
 ]
 
@@ -155,3 +157,6 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+GOOGLE_MAPS_API_KEY = config('GOOGLE_MAPS_API_KEY', default='')
+IPSTACK_API_KEY = config('IPSTACK_API_KEY', default='')

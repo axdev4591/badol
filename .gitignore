@@ -2,3 +2,4 @@
 staticfiles
 *.pyc
 Pipfile
+prod_settings.py
