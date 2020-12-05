@@ -22,7 +22,6 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 from badolexpenses.prod_settings import *
 from badolexpenses.settings import *
-import os
 
 
 
@@ -135,7 +134,7 @@ class VerificationView(View):
             messages.success(request, 'Account activated successfully')
 
             #Notify admin when an account has been validated
-            app_url = "https://"+os.environ.get('URL') 
+            app_url = "https://"+ALLOWED_HOSTS[2] 
             email = EmailMessage(
                 'Accès au dashboard Badol',
                 'Salut Admin \n\n'+user.username + ' vient d activer son compte, veuillez lui donner accès au dashboard badol \n\n'+app_url,
@@ -307,7 +306,7 @@ class ContactView(View):
                 return render(request, 'authentication/contact.html', context)
 
         #Notify admin when an account has been validated
-        app_url = "https://" + os.environ.get('URL')
+        app_url = "https://"+ALLOWED_HOSTS[2] 
         email1 = EmailMessage(
                     sujet,
                     message  + "\n\n "+email+"\n"+nom+"\n"+app_url,
