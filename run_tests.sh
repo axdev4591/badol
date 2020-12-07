@@ -7,7 +7,7 @@ echo '######---------- Creating virtual environement -----------#####\n'
 pipenv shell
 
 echo '######---------- Install requirements -----------####\n'
-pip install -r ./requirements.txt
+pip install -r requirements.txt
 
 
 echo '######---------- run tests -----------####\n'
