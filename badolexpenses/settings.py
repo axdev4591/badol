@@ -44,9 +44,17 @@ INSTALLED_APPS = [
     'userincome.apps.UserincomeConfig',
     'authenticationApp.apps.AuthenticationappConfig',
     'rest_framework',
+    'social_django',
 
 ]
 
+#socail api authentication
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+#middlewares
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -57,8 +65,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#root urls of the app
 ROOT_URLCONF = 'badolexpenses.urls'
 
+
+#templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -70,6 +81,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends', # The social_django context processors help in adding backend and associations data to template context, This makes it possible for us to access data about the authenticated user using template tags
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
@@ -147,7 +160,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MESSAGE_TAGS = {
         messages.ERROR: 'danger'
-
 }
 
 # email stuff
@@ -160,3 +172,26 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 GOOGLE_MAPS_API_KEY = config('GOOGLE_MAPS_API_KEY', default='')
 IPSTACK_API_KEY = config('IPSTACK_API_KEY', default='')
+
+
+#Facebook authentication and user details
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL = 'login'
+SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('FACEBOOK_APP_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('FACEBOOK_APP_SECRET')
+
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] 
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       
+  'fields': 'id, name, email, picture.type(large), link'
+}
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
+]
+
+

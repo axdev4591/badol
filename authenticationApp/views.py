@@ -22,6 +22,12 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 from badolexpenses.prod_settings import *
 from badolexpenses.settings import *
+from django.contrib.auth.decorators import login_required
+
+
+@login_required(login_url='/authentication/login')
+def profile_view(request):
+    return render(request, 'authentication/profile.html')
 
 
 

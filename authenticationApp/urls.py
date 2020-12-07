@@ -1,6 +1,8 @@
-from . views import RegistrationView, UsernameValidationView, EmailValidationView, VerificationView, LoginView, LogoutView, RequestPasswordResetdEmailView, CompletePasswordReset, ContactView
-from django.urls import path
+from . views import * 
+from django.urls import path, include
 from django.views.decorators.csrf import csrf_exempt
+from . import views
+
 
 urlpatterns = [
 
@@ -13,6 +15,9 @@ urlpatterns = [
     path('logout', LogoutView.as_view(), name="logout"),
     path('request-reset-link', RequestPasswordResetdEmailView.as_view(), name="request-password"),
     path('contact', ContactView.as_view(), name="contact"),
+    path('contact', ContactView.as_view(), name="contact"),
+     path('profile', profile_view,
+         name="profile"),
    
 
 ]

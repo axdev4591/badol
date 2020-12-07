@@ -78,8 +78,15 @@
             <span>geolocalisation</span> 
           </a>
         </li>
+
+        <li class="nav-item">
+          <a style="flex-direction: column;" class="nav-link" href="{% url 'profile' %}">
+            <img src="{% static 'img/user.png' %}" width="32" height="32"/>          
+            <span>Profile</span> 
+          </a>
+        </li>
      </ul>
     </div>
 
-  </nav>
+  </nav><img src="{{ass.extra_data.picture.data.url}}" alt="" width="150" height="150" style="border-radius: 50%">
  

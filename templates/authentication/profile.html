@@ -1,0 +1,46 @@
+
+{% extends 'base.html' %}
+{% block title %} Badol | Profile {% endblock %}
+
+{% block content %} 
+
+<div class="container mt-4">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Badol</a></li>
+      <li class="breadcrumb-item" aria-current="page">Mon profile</li>
+    </ol>
+  </nav>
+
+<div class="card">
+  <div class="card-body">
+
+<div class="row">
+    <div class="col-sm-12 mb-3" >
+      <h4 class="text-center" style="margin-left: 5em;"> {{ user.username }}</h4>
+    </div>
+
+        <!-- Add from here -->
+    {% for ass in backends.associated %}
+      {% if ass.provider == 'facebook' %}
+     
+        <div class="col-md-6 text-center">
+            <img  src="{{ass.extra_data.picture.data.url}}" alt="" width="150" height="150" style="border-radius: 50%">
+        </div>
+        <div class="col-md-6 social-container my-2">                 
+            <p> Connecté via:  {{ ass.provider }} </p>
+            <p> Nom:  {{ ass.extra_data.name }} </p>
+            <p> url fourni: <a href="{{ass.extra_data.profile_url}}">link</a></p>
+            <p> email: {{ass.extra_data.email}}</p>
+        </div>
+
+      {% endif %}
+    {% endfor %}
+        <!-- End here -->
+  </div>
+  </div>
+</div>
+</div>
+
+
+{% endblock %}

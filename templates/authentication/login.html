@@ -46,9 +46,10 @@
         <form action="{% url 'login' %}" method="post" id="login-form"><input type="hidden" name="csrfmiddlewaretoken" value="NnCmOqVQCwM9expoYWjgoVSmvoFgDanJyddbaAoxy5qewwrHaBr7CjLezpyKONFD">
           {% csrf_token %}
           {% include 'partials/_messages.html' %}
-
+          <a href="{% url 'social:begin' 'facebook' %}"
+          class="btn btn-outline-info btn-sm" style="border-radius: 4px; float:right;">Facebook login</a>
           <div class="form-row">
-            <!--modifier username, dans views-->
+            <!--modifier username, dans views--> 
             <label class="required" for="id_username">Nom d’utilisateur :</label> <input type="text" name="username" value="{{fieldValues.username}}" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username">
           </div>
           <div class="form-row">
@@ -80,5 +81,3 @@
 </html>
 
 <script src="{% static 'js/register.js' %}"></script>
-
--->

@@ -49,7 +49,16 @@
       
         <li class="nav-item text-nowrap" >
           <span style="color: white;" href="">
-            ({{request.user.username}}) <img src="{% static 'img/user.png' %}" width="30" height="32"/>
+
+            ({{request.user.username}})
+            {% for ass in backends.associated %}
+            {% if ass.provider == 'facebook' %}
+            <a href="{% url 'profile' %}">
+             <img src="{{ass.extra_data.picture.data.url}}" alt="" width="40" height="40" style="border-radius: 50%">
+            </a>
+             {% endif %}
+             {% endfor %}
+
           </span>
         </li>
 
@@ -57,10 +66,9 @@
           <form action="{% url  'logout' %}" method="POST">
             {% csrf_token %}
             <input
-              class="text text-capitalize card"
+              class="btn btn-outline-success rounded btn-sm"
               type="submit"
               value="Déconnexion"
-              style="margin-top:1em;"
             />
           </form>
         </li>

@@ -30,8 +30,6 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
 
 #Geolocalization Api
-
-
 def geoapi(request):
 
 
@@ -42,8 +40,10 @@ def geoapi(request):
         params = {'access_key': IPSTACK_API_KEY}
         response = requests.get('http://api.ipstack.com/%s' % ip_address, params=params)
         request.session['geodata'] = response.json()
+
+        print(f'response geoapi: {response.json()}')
     geodata = request.session['geodata']
-    
+
     return render(request, 'expenses/geoapi.html', {
         'ip': geodata.get('ip'),
         'country': geodata.get('country_name', ''),
@@ -71,8 +71,8 @@ def home(request):
    
     
     date_start_month = datetime.date(int(year), month, 1)
-    Allincomes = UserIncome.objects.filter(owner=request.user)
-    allexpenses = Expense.objects.filter(owner=request.user)
+    Allincomes = UserIncome.objects.all()
+    allexpenses = Expense.objects.all()
 
 
     amount_today = 0
@@ -86,7 +86,7 @@ def home(request):
 
     list_EP_CC = {}
 
-    incomes = UserIncome.objects.filter(owner=request.user,
+    incomes = UserIncome.objects.filter(
                                       date__gte=date_start_month, date__lte=todays_date)
 
     def get_category(income):
@@ -114,34 +114,34 @@ def home(request):
    
     """
 
-    expenses_today = Expense.objects.filter(owner=request.user,
+    expenses_today = Expense.objects.filter(
                                       date__gte=todays_date, date__lte=todays_date)
     for expense in expenses_today:
         amount_today += expense.amount
 
 
-    expenses_yesterday = Expense.objects.filter(owner=request.user,
+    expenses_yesterday = Expense.objects.filter(
                                       date__gte=yesterday, date__lte=yesterday)
     for expense in expenses_yesterday:
         amount_yesterday += expense.amount
 
 
-    expenses_week = Expense.objects.filter(owner=request.user,
+    expenses_week = Expense.objects.filter(
                                       date__gte=a_week_ago, date__lte=todays_date)
     for expense in expenses_week:
         amount_a_week_ago += expense.amount
 
 
-    expenses_month = Expense.objects.filter(owner=request.user,
+    expenses_month = Expense.objects.filter(
                                       date__gte=date_start_month, date__lte=todays_date)
     for expense in expenses_month:
         amount_a_month_ago += expense.amount
 
 
-    expenses_year = Expense.objects.filter(owner=request.user,
+    expenses_year = Expense.objects.filter(
                                       date__gte=a_year_ago, date__lte=todays_date)
 
-    incomes_year = UserIncome.objects.filter(owner=request.user,
+    incomes_year = UserIncome.objects.filter(
                                       date__gte=a_year_ago, date__lte=todays_date)
 
     #revenu annuelle
@@ -202,11 +202,11 @@ def search_expenses(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
         expenses = Expense.objects.filter(
-            amount__istartswith=search_str, owner=request.user) | Expense.objects.filter(
-            date__istartswith=search_str, owner=request.user) | Expense.objects.filter(
-            description__icontains=search_str, owner=request.user) | Expense.objects.filter(
-            category__icontains=search_str, owner=request.user) | Expense.objects.filter(
-            payment__icontains=search_str, owner=request.user)
+            amount__istartswith=search_str) | Expense.objects.filter(
+            date__istartswith=search_str) | Expense.objects.filter(
+            description__icontains=search_str) | Expense.objects.filter(
+            category__icontains=search_str) | Expense.objects.filter(
+            payment__icontains=search_str)
         data = expenses.values()
         return JsonResponse(list(data), safe=False)
 
@@ -249,7 +249,7 @@ def index(request):
         date_last_month2 = datetime.date(int(year), int(month)-2, int(day))
         date_last_month3 = datetime.date(int(year), int(month)-3, int(day))
 
-    expenses = Expense.objects.filter(owner=request.user, date__gte=date_last_month3, date__lte=todays_date).order_by('-id')
+    expenses = Expense.objects.filter(date__gte=date_last_month3, date__lte=todays_date).order_by('-id')
     paginator = Paginator(expenses, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -386,7 +386,7 @@ def expense_category_summary(request):
     
    
     date_start_month = datetime.date(int(year), month, 1)
-    expenses = Expense.objects.filter(owner=request.user,
+    expenses = Expense.objects.filter(
                                       date__gte=date_start_month, date__lte=todays_date)
     """    
     list_date_amount_tmp = {"Jan-"+str(year):"0", "Feb-"+str(year):"0", "Mar-"+str(year):"0", 
@@ -400,7 +400,7 @@ def expense_category_summary(request):
 
 
         if start and end:
-            expenses = Expense.objects.filter(owner=request.user,
+            expenses = Expense.objects.filter(
                                       date__gte=start, date__lte=end)     
             
             def get_category(expense):
@@ -465,10 +465,11 @@ def stats_view(request):
     
    
     date_start_month = datetime.date(int(year), month, 1)
-    expenses = Expense.objects.filter(owner=request.user,
+    expenses = Expense.objects.filter(
                                       date__gte=date_start_month, date__lte=todays_date)
 
     categories = Category.objects.all()
+
     
     try:    
         currency = UserPreference.objects.get(user=request.user).currency
@@ -507,7 +508,7 @@ def export_pdf(request):
     allexpense = 0
     
     date_start_month = datetime.date(int(year), month, 1)
-    expenses = Expense.objects.filter(owner=request.user,
+    expenses = Expense.objects.filter(
                                     date__gte=date_start_month, date__lte=todays_date)
 
     if request.method == 'POST':
@@ -534,7 +535,7 @@ def export_pdf(request):
      
           
         if end and start:
-            expenses = Expense.objects.filter(owner=request.user,
+            expenses = Expense.objects.filter(
                                             date__gte=start, date__lte=end)
         
 
@@ -589,7 +590,7 @@ def export_excel(request):
 
     font_style = xlwt.XFStyle()
 
-    rows = Expense.objects.filter(owner=request.user).values_list('amount','payment', 'category', 'description', 'date')
+    rows = Expense.objects.values_list('amount','payment', 'category', 'description', 'date')
     if request.method == 'POST':
         data = request.body
         array1 = data.split(b'&')
@@ -615,7 +616,7 @@ def export_excel(request):
 
             
         if end and start:
-            rows = Expense.objects.filter(owner=request.user, date__gte=start, date__lte=end).values_list('amount','payment', 'category', 'description', 'date')
+            rows = Expense.objects.filter(date__gte=start, date__lte=end).values_list('amount','payment', 'category', 'description', 'date')
 
     for row in rows:
         row_num += 1
@@ -640,8 +641,6 @@ def export_excel(request):
     return response
 
 
-
-
 def export_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachement; filename=BadolExpenses' + \
@@ -656,3 +655,62 @@ def export_csv(request):
         writer.writerow([expense.amount, expense.payment, expense.category, expense.description, expense.date])
     
     return response
+
+
+
+
+#Extra code, to automate text messaging
+"""
+This has nothing to do with expense app, i just wanted to put it there, not to create a separate app juste for this task of scheduling text messages
+
+"""
+
+import random, schedule, time
+
+from twilio.rest import Client
+
+
+account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+
+
+GOOD_MORNING_QUOTES = [
+    "Bonjour! Bon reveil à toi <3",
+    "Salut! La journéee s'annonce bien chez toi ? <3",
+    "Bon reveil matinal!",
+    "Bonjour soit benit"
+]
+
+GOOD_EVENING_QUOTES = [
+    "Bonsoir ça été ta journée?",
+    "Hello!",
+    "Comment vas ?",
+    "Bonsoir, quoi de neuf <3"
+]
+
+
+def send_message(quotes_list=GOOD_MORNING_QUOTES):
+
+    account = account_sid
+    token = auth_token
+    client = Client(account, token)
+    quote = quotes_list[random.randint(0, len(quotes_list)-1)]
+
+    client.messages.create(to="+33768936922",
+                           from_="+33758000973",
+                           body=quote
+                           )
+
+
+# send a message in the morning
+schedule.every().day.at("10:58").do(send_message, GOOD_MORNING_QUOTES)
+
+# send a message in the evening
+schedule.every().day.at("20:00").do(send_message, GOOD_EVENING_QUOTES)
+
+# testing
+schedule.every().day.at("19:26").do(send_message, GOOD_EVENING_QUOTES)
+
+
+schedule.run_pending()
+time.sleep(2)

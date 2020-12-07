@@ -21,12 +21,12 @@ def search_income(request):
     if request.method == 'POST':
         search_str = json.loads(request.body).get('searchText')
         income = UserIncome.objects.filter(
-            amount__istartswith=search_str, owner=request.user) | UserIncome.objects.filter(
-            date__istartswith=search_str, owner=request.user) | UserIncome.objects.filter(
-            description__icontains=search_str, owner=request.user) | UserIncome.objects.filter(
-            source__icontains=search_str, owner=request.user) | UserIncome.objects.filter(
-            categories__icontains=search_str, owner=request.user) | UserIncome.objects.filter(
-            versements__icontains=search_str, owner=request.user)
+            amount__istartswith=search_str) | UserIncome.objects.filter(
+            date__istartswith=search_str) | UserIncome.objects.filter(
+            description__icontains=search_str) | UserIncome.objects.filter(
+            source__icontains=search_str) | UserIncome.objects.filter(
+            categories__icontains=search_str) | UserIncome.objects.filter(
+            versements__icontains=search_str)
         data = income.values()
         return JsonResponse(list(data), safe=False)
 
@@ -72,7 +72,7 @@ def index(request):
         date_last_month2 = datetime.date(int(year), int(month)-2, int(day))
         date_last_month3 = datetime.date(int(year), int(month)-3, int(day))
     
-    income = UserIncome.objects.filter(owner=request.user,  date__gte=date_last_month3, date__lte=todays_date).order_by('-id')
+    income = UserIncome.objects.filter(date__gte=date_last_month3, date__lte=todays_date).order_by('-id')
     paginator = Paginator(income, 6)
     page_number = request.GET.get('page')
     page_obj = Paginator.get_page(paginator, page_number)
@@ -130,7 +130,7 @@ def add_income(request):
             messages.error(request, 'description obligatoire')
             return render(request, 'income/add_income.html', context)
 
-        UserIncome.objects.create(owner=request.user, amount=amount, date=date,
+        UserIncome.objects.create(owner=request.user,  amount=amount, date=date,
                                   source=source, categories=categorie, versements=versement, description=description)
         messages.success(request, 'Votre revenu a été bien enregistré')
         
@@ -189,6 +189,7 @@ def income_edit(request, id):
         income.categories = categorie
         income.versements = versement
         income.description = description
+        income.owner = request.user
 
         income.save()
         messages.success(request, 'Record updated  successfully')
@@ -254,30 +255,30 @@ def income_category_summary(request):
     finalrep_expense = {}
     finalrep_income = {}
 
-    this_month_incomes = UserIncome.objects.filter(owner=request.user,
+    this_month_incomes = UserIncome.objects.filter( 
                                       date__gte=date_start_year, date__lte=todays_date)
-    last_month_incomes = UserIncome.objects.filter(owner=request.user,
+    last_month_incomes = UserIncome.objects.filter( 
                                       date__gte=date_start_year, date__lte=date_last_month)
 
-    last_month_incomes3 = UserIncome.objects.filter(owner=request.user,
+    last_month_incomes3 = UserIncome.objects.filter( 
                                       date__gte=date_start_year, date__lte=date_last_month3)
-    last_month_incomes4 = UserIncome.objects.filter(owner=request.user,
+    last_month_incomes4 = UserIncome.objects.filter( 
                                       date__gte=date_start_year, date__lte=date_last_month4)
 
 
 
-    this_month_expenses = Expense.objects.filter(owner=request.user,
+    this_month_expenses = Expense.objects.filter( 
                                       date__gte=date_start_year, date__lte=todays_date)
-    last_month_expenses = Expense.objects.filter(owner=request.user,
+    last_month_expenses = Expense.objects.filter( 
                                       date__gte=date_start_year, date__lte=date_last_month)
 
-    last_month_expenses3 = Expense.objects.filter(owner=request.user,
+    last_month_expenses3 = Expense.objects.filter( 
                                       date__gte=date_start_year, date__lte=date_last_month3)
-    last_month_expenses4 = Expense.objects.filter(owner=request.user,
+    last_month_expenses4 = Expense.objects.filter( 
                                       date__gte=date_start_year, date__lte=date_last_month4)
 
-    Allexpenses = Expense.objects.filter(owner=request.user)
-    Allincomes = UserIncome.objects.filter(owner=request.user)
+    Allexpenses = Expense.objects.all()
+    Allincomes = UserIncome.objects.all()
 
 
     for item in this_month_incomes:
@@ -335,7 +336,7 @@ def income_category_summary(request):
              
 
         if start and end:
-            incomes = UserIncome.objects.filter(owner=request.user,
+            incomes = UserIncome.objects.filter( 
                                       date__gte=start, date__lte=end)     
             
                 # check if solde calculate its income
@@ -481,8 +482,8 @@ def instats_view(request):
       
     
     date_start_month = datetime.date(int(year), month, 1)
-    income = UserIncome.objects.filter(owner=request.user)
-    Allexpenses = Expense.objects.filter(owner=request.user)
+    income = UserIncome.objects.all()
+    Allexpenses = Expense.objects.all()
 
   
 
@@ -529,13 +530,13 @@ def iexport_pdf(request):
    
     
     date_start_month = datetime.date(int(year), month, 1)
-    incomes = UserIncome.objects.filter(owner=request.user,
+    incomes = UserIncome.objects.filter( 
                                     date__gte=date_start_month, date__lte=todays_date)
-    income = UserIncome.objects.filter(owner=request.user)
+    income = UserIncome.objects.all()
     for item in income:
         allincome += item.amount
 
-    expense = Expense.objects.filter(owner=request.user)
+    expense = Expense.objects.all()
     for item in expense:
         allexpense += item.amount
 
@@ -565,7 +566,7 @@ def iexport_pdf(request):
      
           
         if end and start:
-            incomes = UserIncome.objects.filter(owner=request.user,
+            incomes = UserIncome.objects.filter( 
                                             date__gte=start, date__lte=end)
         
 
@@ -617,11 +618,11 @@ def iexport_excel(request):
 
     columns = ['Montant', 'Source',  'Categorie' , 'Mode de versement','Description', 'Date']
 
-    income = UserIncome.objects.filter(owner=request.user)
+    income = UserIncome.objects.all()
     for item in income:
         allincome += item.amount
 
-    expense = Expense.objects.filter(owner=request.user)
+    expense = Expense.objects.all()
     for item in expense:
         allexpense += item.amount
 
@@ -632,7 +633,7 @@ def iexport_excel(request):
 
     font_style = xlwt.XFStyle()
 
-    rows = UserIncome.objects.filter(owner=request.user).values_list('amount','source', 'categories', 'versements', 'description', 'date')
+    rows = UserIncome.objects.values_list('amount','source', 'categories', 'versements', 'description', 'date')
 
     if request.method == 'POST':
         data = request.body
@@ -659,7 +660,7 @@ def iexport_excel(request):
 
             
         if end and start:
-            rows = UserIncome.objects.filter(owner=request.user, date__gte=start, date__lte=end).values_list('amount','source', 'categories', 'versements', 'description', 'date')
+            rows = UserIncome.objects.filter(date__gte=start, date__lte=end).values_list('amount','source', 'categories', 'versements', 'description', 'date')
 
     for row in rows:
         row_num += 1
@@ -698,7 +699,7 @@ def iexport_csv(request):
     writer =  csv.writer(response)
     writer.writerow(['Montant', 'Source', 'Categorie', 'Mode de versement','Description', 'Date'])
 
-    incomes = UserIncome.objects.filter(owner=request.user)
+    incomes = UserIncome.objects.all()
 
     for income in incomes :
         writer.writerow([income.amount, income.source, income.categories, income.versements, income.description, income.date])
