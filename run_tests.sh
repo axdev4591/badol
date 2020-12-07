@@ -15,7 +15,7 @@ echo '######---------- Jump to wokspace -----------####\n'
 cd /var/lib/jenkins/workspace/$JOB_NAME/
 
 echo '######---------- run tests -----------####\n'
-python -m pytest expenses/test --junitxml=./xmlReport/output.xml
+./manage.py jenkins --enable-coverage
 
 echo '######---------- deactivate virtual env -----------####\n'
 
