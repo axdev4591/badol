@@ -2,6 +2,7 @@
 
 #Step for test
 pwd
+ls
 
 echo '######---------- Creating virtual environement -----------#####\n'
 pipenv shell
