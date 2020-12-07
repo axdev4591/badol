@@ -15,5 +15,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 #SECRET_KET = os.environ['SECRET_KET']
 
-ALLOWED_HOSTS = ['https://badol.herokuapp.com'] 
+ALLOWED_HOSTS = ['badol.herokuapp.com'] 
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
