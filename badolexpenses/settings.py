@@ -27,7 +27,7 @@ SECRET_KEY = '+-x&o7pk$fkqkcc4_-%r2d1q5m%j$pi+t=0%6-@#&9l(^8oiu#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'badol.herokuapp.com'] 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://badol.herokuapp.com'] 
 
 
 # Application definition
