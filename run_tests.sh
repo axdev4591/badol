@@ -4,6 +4,8 @@
 pwd
 ls
 
+export PIPENV_VENV_IN_PROJECT=1
+
 echo '######---------- Creating virtual environement -----------#####\n'
 pipenv shell
 
