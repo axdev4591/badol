@@ -8,7 +8,7 @@ echo '######---------- Creating virtual environement -----------#####\n'
 pipenv shell
 
 echo '######---------- Install requirements -----------####\n'
-pip install -r requirements.txt
+pip freeze requirements.txt | sed -e '/^\s*#.*$/d' -e '/^\s*$/d' | xargs -n 1 pip install
 
 
 echo '######---------- run tests -----------####\n'
