@@ -17,3 +17,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ALLOWED_HOSTS = ['badol.herokuapp.com'] 
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
+
+#asgiref for ascyn wsgi
